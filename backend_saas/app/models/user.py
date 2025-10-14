@@ -54,6 +54,7 @@ class User(Base):
     monitors = relationship("Monitor", back_populates="user")
     notifications = relationship("Notification", back_populates="user")
     calendly_events = relationship("CalendlyEvent", back_populates="user")
+    api_keys = relationship("APIKey", back_populates="user")
     
     def __repr__(self):
         return f"<User(id={self.id}, email={self.email}, plan={self.plan})>"

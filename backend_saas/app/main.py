@@ -18,6 +18,8 @@ from app.api.v1.calendly.booking import router as calendly_router
 from app.api.v1.sms.notifications import router as sms_router
 from app.api.v1.slack.integration import router as slack_router
 from app.api.v1.analytics.dashboard import router as analytics_router
+from app.api.v1.api_keys.management import router as api_keys_router
+from app.api.v1.monitors.api import router as monitors_api_router
 
 # Configure logging
 logging.basicConfig(
@@ -159,6 +161,18 @@ app.include_router(
     analytics_router,
     prefix=f"{settings.API_V1_STR}/analytics",
     tags=["Analytics"]
+)
+
+app.include_router(
+    api_keys_router,
+    prefix=f"{settings.API_V1_STR}/api-keys",
+    tags=["API Keys"]
+)
+
+app.include_router(
+    monitors_api_router,
+    prefix=f"{settings.API_V1_STR}/monitors",
+    tags=["Monitors API"]
 )
 
 # Root endpoint
