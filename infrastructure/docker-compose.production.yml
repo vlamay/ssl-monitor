@@ -1,0 +1,299 @@
+version: '3.8'
+
+services:
+  ssl-monitor-api:
+    image: ${DOCKER_REGISTRY}/ssl-monitor-api:${DOCKER_IMAGE_TAG:-latest}
+    container_name: ssl-monitor-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      
+      # External Services
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      
+      # Environment
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      
+      # Monitoring
+      - PROMETHEUS_ENABLED=true
+      - SENTRY_DSN=${SENTRY_DSN}
+      
+    volumes:
+      - ./logs:/app/logs
+      - ./static:/app/static
+    networks:
+      - ssl-monitor-network
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  ssl-monitor-worker:
+    image: ${DOCKER_REGISTRY}/ssl-monitor-api:${DOCKER_IMAGE_TAG:-latest}
+    container_name: ssl-monitor-worker
+    restart: unless-stopped
+    command: ["python", "-m", "celery", "worker", "-A", "app.celery", "--loglevel=info", "--concurrency=4"]
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      
+      # External Services
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      
+      # Environment
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      
+      # Monitoring
+      - PROMETHEUS_ENABLED=true
+      - SENTRY_DSN=${SENTRY_DSN}
+      
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - ssl-monitor-network
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  ssl-monitor-scheduler:
+    image: ${DOCKER_REGISTRY}/ssl-monitor-api:${DOCKER_IMAGE_TAG:-latest}
+    container_name: ssl-monitor-scheduler
+    restart: unless-stopped
+    command: ["python", "-m", "celery", "beat", "-A", "app.celery", "--loglevel=info"]
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      
+      # Security
+      - SECRET_KEY=${SECRET_KEY}
+      
+      # Environment
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      
+      # Monitoring
+      - PROMETHEUS_ENABLED=true
+      - SENTRY_DSN=${SENTRY_DSN}
+      
+    volumes:
+      - ./logs:/app/logs
+      - ./celerybeat-schedule:/app/celerybeat-schedule
+    networks:
+      - ssl-monitor-network
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  redis:
+    image: redis:7-alpine
+    container_name: ssl-monitor-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - ssl-monitor-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  # Monitoring stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ssl-monitor-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules:/etc/prometheus/rules
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    networks:
+      - ssl-monitor-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ssl-monitor-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin123}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SERVER_ROOT_URL=https://monitoring.sslmonitor.pro
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - ssl-monitor-network
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: ssl-monitor-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=https://alerts.sslmonitor.pro'
+    networks:
+      - ssl-monitor-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+
+  # Log aggregation
+  loki:
+    image: grafana/loki:latest
+    container_name: ssl-monitor-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - ssl-monitor-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: ssl-monitor-promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml
+      - ./logs:/var/log/ssl-monitor
+      - /var/log:/var/log:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - ssl-monitor-network
+    depends_on:
+      - loki
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
+
+volumes:
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  alertmanager_data:
+    driver: local
+  loki_data:
+    driver: local
+
+networks:
+  ssl-monitor-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,94 +1,190 @@
 services:
-  # Backend API
+  # Production API Service
   - type: web
-    name: ssl-monitor-api
+    name: ssl-monitor-api-prod
     env: python
+    plan: starter  # $7/month - no sleep, better performance
     region: frankfurt
-    plan: free
-    branch: main
-    rootDir: backend
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 4
+    buildCommand: |
+      pip install -r requirements.txt
+      python -m pip install gunicorn
+    startCommand: gunicorn app.main:app --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker --timeout 120 --keep-alive 2
+    healthCheckPath: /health
+    autoDeploy: false  # Manual deployment for production
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: DATABASE_URL
-        fromDatabase:
-          name: ssl-monitor-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: ssl-monitor-redis
-          property: connectionString
+      - key: FLASK_ENV
+        value: production
       - key: SECRET_KEY
         generateValue: true
-      - key: FRONTEND_URL
-        value: https://cloudsre.xyz
-      - key: BACKEND_URL
-        value: https://ssl-monitor-api.onrender.com
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: STRIPE_PUBLISHABLE_KEY
-        sync: false
-      - key: STRIPE_WEBHOOK_SECRET
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ssl-monitor-db-prod
+          property: connectionString
+      - key: REDIS_URL
+        value: https://helping-snapper-23185.upstash.io
+      - key: UPSTASH_REDIS_REST_URL
+        value: https://helping-snapper-23185.upstash.io
+      - key: UPSTASH_REDIS_REST_TOKEN
         sync: false
       - key: TELEGRAM_BOT_TOKEN
         sync: false
       - key: TELEGRAM_CHAT_ID
         sync: false
-    
-  # PostgreSQL Database
-  - type: pserv
-    name: ssl-monitor-db
-    env: docker
-    plan: free
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://sslmonitor.pro,https://www.sslmonitor.pro
+      - key: RATE_LIMIT_ENABLED
+        value: true
+      - key: LOG_LEVEL
+        value: INFO
+      - key: SENTRY_DSN
+        sync: false
+
+  # Staging API Service
+  - type: web
+    name: ssl-monitor-api-staging
+    env: python
+    plan: free  # Free tier for staging
     region: frankfurt
-    
-  # Redis Cache
-  - type: redis
-    name: ssl-monitor-redis
-    plan: free
-    region: frankfurt
-    
-  # Celery Worker
+    buildCommand: |
+      pip install -r requirements.txt
+      python -m pip install gunicorn
+    startCommand: gunicorn app.main:app --bind 0.0.0.0:$PORT --workers 2 --worker-class uvicorn.workers.UvicornWorker --timeout 120
+    healthCheckPath: /health
+    autoDeploy: true  # Auto-deploy on push to develop branch
+    envVars:
+      - key: FLASK_ENV
+        value: staging
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ssl-monitor-db-staging
+          property: connectionString
+      - key: REDIS_URL
+        value: https://helping-snapper-23185.upstash.io
+      - key: UPSTASH_REDIS_REST_URL
+        value: https://helping-snapper-23185.upstash.io
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://ssl-monitor-staging.onrender.com
+      - key: RATE_LIMIT_ENABLED
+        value: false  # Disable for testing
+      - key: LOG_LEVEL
+        value: DEBUG
+
+  # Background Worker for SSL Checks
   - type: worker
     name: ssl-monitor-worker
     env: python
+    plan: starter  # $7/month
     region: frankfurt
-    plan: free
-    branch: main
-    rootDir: backend
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: celery -A celery_worker worker --loglevel=info --pool=solo
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: celery -A app.celery worker --loglevel=info --concurrency=4
     envVars:
+      - key: FLASK_ENV
+        value: production
       - key: DATABASE_URL
         fromDatabase:
-          name: ssl-monitor-db
+          name: ssl-monitor-db-prod
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: ssl-monitor-redis
-          property: connectionString
-    
-  # Celery Beat (Scheduler)
+        value: https://helping-snapper-23185.upstash.io
+      - key: UPSTASH_REDIS_REST_URL
+        value: https://helping-snapper-23185.upstash.io
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+
+  # Scheduler for Periodic Tasks
   - type: worker
-    name: ssl-monitor-beat
+    name: ssl-monitor-scheduler
     env: python
+    plan: starter  # $7/month
     region: frankfurt
-    plan: free
-    branch: main
-    rootDir: backend
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: celery -A celery_worker beat --loglevel=info
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: celery -A app.celery beat --loglevel=info
     envVars:
+      - key: FLASK_ENV
+        value: production
       - key: DATABASE_URL
         fromDatabase:
-          name: ssl-monitor-db
+          name: ssl-monitor-db-prod
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: ssl-monitor-redis
-          property: connectionString
+        value: https://helping-snapper-23185.upstash.io
+      - key: SECRET_KEY
+        sync: false
+
+  # N8N Automation (EU Region)
+  - type: web
+    name: ssl-monitor-n8n
+    env: docker
+    plan: starter  # $7/month
+    region: frankfurt  # EU region for GDPR compliance
+    dockerfilePath: ./n8n/Dockerfile
+    healthCheckPath: /healthz
+    envVars:
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: true
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        sync: false
+      - key: N8N_HOST
+        value: ssl-monitor-n8n.onrender.com
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_PROTOCOL
+        value: https
+      - key: WEBHOOK_URL
+        value: https://ssl-monitor-n8n.onrender.com
+      - key: GENERIC_TIMEZONE
+        value: Europe/Prague
+      - key: N8N_LOG_LEVEL
+        value: info
+
+databases:
+  # Production Database
+  - name: ssl-monitor-db-prod
+    plan: starter  # $7/month
+    region: frankfurt
+    postgresMajorVersion: 13
+    
+  # Staging Database
+  - name: ssl-monitor-db-staging
+    plan: free  # Free tier for staging (90 days)
+    region: frankfurt
+    postgresMajorVersion: 13
+
+# Static Site for Frontend (if using Render for frontend)
+staticSites:
+  - name: ssl-monitor-frontend
+    buildCommand: |
+      npm install
+      npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://ssl-monitor-api-prod.onrender.com
+      - key: REACT_APP_ENVIRONMENT
+        value: production

@@ -1,0 +1,364 @@
+pipeline {
+    agent any
+    
+    environment {
+        // Docker registry
+        DOCKER_REGISTRY = 'registry.sslmonitor.pro'
+        DOCKER_IMAGE = 'ssl-monitor-api'
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        
+        // AWS credentials for deployment
+        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+        
+        // Hetzner Cloud credentials
+        HETZNER_TOKEN = credentials('hetzner-cloud-token')
+        
+        // Application secrets
+        DATABASE_URL = credentials('database-url')
+        REDIS_URL = credentials('redis-url')
+        SECRET_KEY = credentials('secret-key')
+        JWT_SECRET_KEY = credentials('jwt-secret-key')
+        TELEGRAM_BOT_TOKEN = credentials('telegram-bot-token')
+        TELEGRAM_CHAT_ID = credentials('telegram-chat-id')
+        STRIPE_SECRET_KEY = credentials('stripe-secret-key')
+        STRIPE_WEBHOOK_SECRET = credentials('stripe-webhook-secret')
+        
+        // Notification settings
+        SLACK_WEBHOOK = credentials('slack-webhook-url')
+        TELEGRAM_NOTIFICATIONS = credentials('telegram-notifications')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    env.GIT_COMMIT_SHORT = sh(
+                        script: 'git rev-parse --short HEAD',
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+        
+        stage('Build') {
+            parallel {
+                stage('Backend Build') {
+                    steps {
+                        script {
+                            // Build backend Docker image
+                            sh """
+                                docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} \\
+                                    -f backend/Dockerfile.prod \\
+                                    backend/
+                            """
+                            
+                            // Tag as latest for production
+                            sh """
+                                docker tag ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} \\
+                                    ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest
+                            """
+                        }
+                    }
+                }
+                
+                stage('Frontend Build') {
+                    steps {
+                        script {
+                            // Build frontend
+                            sh """
+                                cd frontend
+                                npm install
+                                npm run build
+                            """
+                            
+                            // Upload to Cloudflare Pages
+                            sh """
+                                npx wrangler pages publish dist \\
+                                    --project-name ssl-monitor-frontend \\
+                                    --compatibility-date 2024-01-01
+                            """
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Test') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        script {
+                            // Run unit tests
+                            sh """
+                                cd backend
+                                docker run --rm \\
+                                    -v \$(pwd):/app \\
+                                    -w /app \\
+                                    python:3.11-slim \\
+                                    pip install -r requirements.txt && \\
+                                    python -m pytest tests/unit/ -v --cov=app --cov-report=xml
+                            """
+                        }
+                    }
+                    post {
+                        always {
+                            // Publish test results
+                            publishTestResults testResultsPattern: 'backend/tests/reports/*.xml'
+                            publishCoverage adapters: [
+                                coberturaAdapter('backend/coverage.xml')
+                            ], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+                        }
+                    }
+                }
+                
+                stage('Integration Tests') {
+                    steps {
+                        script {
+                            // Run integration tests
+                            sh """
+                                cd backend
+                                docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+                                docker-compose -f docker-compose.test.yml down -v
+                            """
+                        }
+                    }
+                }
+                
+                stage('Security Scan') {
+                    steps {
+                        script {
+                            // Run security scan with Trivy
+                            sh """
+                                docker run --rm \\
+                                    -v /var/run/docker.sock:/var/run/docker.sock \\
+                                    -v \$(pwd):/tmp \\
+                                    aquasec/trivy image \\
+                                    --format json --output /tmp/trivy-report.json \\
+                                    ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            """
+                        }
+                    }
+                    post {
+                        always {
+                            // Publish security scan results
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: true,
+                                keepAll: true,
+                                reportDir: '.',
+                                reportFiles: 'trivy-report.json',
+                                reportName: 'Security Scan Report'
+                            ])
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Gates') {
+            steps {
+                script {
+                    // Check test coverage
+                    def coverage = sh(
+                        script: 'grep -o "coverage: [0-9]*%" backend/coverage.xml | grep -o "[0-9]*"',
+                        returnStdout: true
+                    ).trim()
+                    
+                    if (coverage.toInteger() < 80) {
+                        error "Test coverage is ${coverage}%, minimum required is 80%"
+                    }
+                    
+                    // Check security vulnerabilities
+                    def vulnerabilities = sh(
+                        script: 'grep -c "VulnerabilityID" trivy-report.json || echo 0',
+                        returnStdout: true
+                    ).trim()
+                    
+                    if (vulnerabilities.toInteger() > 10) {
+                        error "Too many security vulnerabilities: ${vulnerabilities}"
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'feature/*'
+                }
+            }
+            steps {
+                script {
+                    // Deploy to staging environment
+                    sh """
+                        # Deploy to staging server
+                        ssh -o StrictHostKeyChecking=no ubuntu@staging.sslmonitor.pro << 'EOF'
+                            cd /opt/ssl-monitor
+                            
+                            # Pull new image
+                            docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            
+                            # Update environment
+                            export DOCKER_IMAGE_TAG=${DOCKER_TAG}
+                            envsubst < docker-compose.staging.yml > docker-compose.yml
+                            
+                            # Deploy
+                            docker-compose up -d
+                            
+                            # Wait for health check
+                            timeout 60 bash -c 'until curl -f http://localhost:8000/health; do sleep 5; done'
+                        EOF
+                    """
+                }
+            }
+        }
+        
+        stage('Smoke Tests') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'feature/*'
+                }
+            }
+            steps {
+                script {
+                    // Run smoke tests against staging
+                    sh """
+                        # Test API endpoints
+                        curl -f http://staging.sslmonitor.pro/api/health || exit 1
+                        curl -f http://staging.sslmonitor.pro/api/trial/test || exit 1
+                        
+                        # Test webhook endpoints
+                        curl -f http://staging.sslmonitor.pro/billing/webhook/test || exit 1
+                        curl -f http://staging.sslmonitor.pro/telegram/webhook/test || exit 1
+                        
+                        # Test frontend
+                        curl -f http://staging.sslmonitor.pro/ || exit 1
+                    """
+                }
+            }
+        }
+        
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    // Blue-green deployment
+                    sh """
+                        # Deploy to blue environment
+                        ssh -o StrictHostKeyChecking=no ubuntu@blue.sslmonitor.pro << 'EOF'
+                            cd /opt/ssl-monitor
+                            
+                            # Pull new image
+                            docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            
+                            # Update environment
+                            export DOCKER_IMAGE_TAG=${DOCKER_TAG}
+                            envsubst < docker-compose.production.yml > docker-compose.yml
+                            
+                            # Deploy
+                            docker-compose up -d
+                            
+                            # Wait for health check
+                            timeout 120 bash -c 'until curl -f http://localhost:8000/health; do sleep 10; done'
+                        EOF
+                        
+                        # Switch load balancer to blue
+                        ssh -o StrictHostKeyChecking=no ubuntu@lb.sslmonitor.pro << 'EOF'
+                            # Update load balancer configuration
+                            sed -i 's/green.sslmonitor.pro/blue.sslmonitor.pro/g' /etc/nginx/sites-available/ssl-monitor
+                            nginx -t && systemctl reload nginx
+                        EOF
+                        
+                        # Wait for traffic to switch
+                        sleep 30
+                        
+                        # Verify deployment
+                        curl -f https://sslmonitor.pro/api/health || exit 1
+                        
+                        # If successful, update green environment
+                        ssh -o StrictHostKeyChecking=no ubuntu@green.sslmonitor.pro << 'EOF'
+                            cd /opt/ssl-monitor
+                            docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                            export DOCKER_IMAGE_TAG=${DOCKER_TAG}
+                            envsubst < docker-compose.production.yml > docker-compose.yml
+                            docker-compose up -d
+                        EOF
+                    """
+                }
+            }
+        }
+        
+        stage('Post-Deployment Tests') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    // Run post-deployment tests
+                    sh """
+                        # Test production endpoints
+                        curl -f https://sslmonitor.pro/api/health || exit 1
+                        curl -f https://sslmonitor.pro/api/trial/test || exit 1
+                        
+                        # Test SSL certificate
+                        openssl s_client -connect sslmonitor.pro:443 -servername sslmonitor.pro < /dev/null 2>/dev/null | openssl x509 -noout -dates
+                        
+                        # Test database connectivity
+                        curl -f https://sslmonitor.pro/api/health/database || exit 1
+                        
+                        # Test Redis connectivity
+                        curl -f https://sslmonitor.pro/api/health/redis || exit 1
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up workspace
+            cleanWs()
+        }
+        
+        success {
+            script {
+                // Send success notification
+                if (env.BRANCH_NAME == 'main') {
+                    sh """
+                        curl -X POST -H 'Content-type: application/json' \\
+                            --data '{"text":"✅ SSL Monitor Pro deployed successfully to production!\\nBuild: ${BUILD_NUMBER}\\nCommit: ${GIT_COMMIT_SHORT}\\nEnvironment: Production"}' \\
+                            ${SLACK_WEBHOOK}
+                    """
+                }
+            }
+        }
+        
+        failure {
+            script {
+                // Send failure notification
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \\
+                        --data '{"text":"❌ SSL Monitor Pro deployment failed!\\nBuild: ${BUILD_NUMBER}\\nBranch: ${BRANCH_NAME}\\nCommit: ${GIT_COMMIT_SHORT}\\nLog: ${BUILD_URL}console"}' \\
+                        ${SLACK_WEBHOOK}
+                """
+            }
+        }
+        
+        unstable {
+            script {
+                // Send unstable notification
+                sh """
+                    curl -X POST -H 'Content-type: application/json' \\
+                        --data '{"text":"⚠️ SSL Monitor Pro deployment unstable!\\nBuild: ${BUILD_NUMBER}\\nBranch: ${BRANCH_NAME}\\nLog: ${BUILD_URL}console"}' \\
+                        ${SLACK_WEBHOOK}
+                """
+            }
+        }
+    }
+}

@@ -55,6 +55,10 @@ from app.user_profile import router as user_profile_router  # PostgreSQL version
 from app.user_redis import router as user_redis_router  # NEW: Redis version (no migration needed!)
 from app.notifications import router as notifications_router  # NEW: Notifications API
 from app.trial import router as trial_router  # NEW: Trial API
+from app.health import *  # NEW: Health checks
+from app.rate_limit import *  # NEW: Rate limiting
+from app.telegram_monitoring import *  # NEW: Telegram monitoring
+from app.security import init_security  # NEW: Security middleware
 from app.migrate import run_migrations  # Auto migration
 
 # Configure logging
@@ -127,12 +131,24 @@ async def startup_event():
     
     logger.info("✅ Application started successfully")
 
+# Initialize security middleware
+init_security(app)
+
 # Include routers
 app.include_router(billing.router)
 # app.include_router(user_profile_router)  # PostgreSQL version (commented out - needs migration)
 app.include_router(user_redis_router)  # Redis version (works immediately!)
 app.include_router(notifications_router)  # Notifications API (works immediately!)
 app.include_router(trial_router)  # Trial API (works immediately!)
+
+# Test Telegram bot connection on startup
+@app.on_event("startup")
+async def test_telegram_bot():
+    """Test Telegram bot connection on startup"""
+    if test_telegram_bot():
+        logger.info("✅ Telegram bot connection successful")
+    else:
+        logger.warning("⚠️ Telegram bot connection failed")
 
 # CORS configuration
 app.add_middleware(
