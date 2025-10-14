@@ -54,6 +54,7 @@ from app import billing
 from app.user_profile import router as user_profile_router  # PostgreSQL version
 from app.user_redis import router as user_redis_router  # NEW: Redis version (no migration needed!)
 from app.notifications import router as notifications_router  # NEW: Notifications API
+from app.trial import router as trial_router  # NEW: Trial API
 from app.migrate import run_migrations  # Auto migration
 
 # Configure logging
@@ -131,6 +132,7 @@ app.include_router(billing.router)
 # app.include_router(user_profile_router)  # PostgreSQL version (commented out - needs migration)
 app.include_router(user_redis_router)  # Redis version (works immediately!)
 app.include_router(notifications_router)  # Notifications API (works immediately!)
+app.include_router(trial_router)  # Trial API (works immediately!)
 
 # CORS configuration
 app.add_middleware(

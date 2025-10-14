@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 from typing import Optional
+from datetime import datetime
 import sys
 import os
 import logging
@@ -140,6 +141,33 @@ async def stripe_webhook(request: Request):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+
+@router.get("/webhook/test")
+async def test_webhook():
+    """Test webhook endpoint for debugging"""
+    return {
+        "status": "ok",
+        "message": "Webhook endpoint is working",
+        "timestamp": datetime.now().isoformat()
+    }
+
+@router.post("/webhook/test")
+async def test_webhook_post(request: Request):
+    """Test webhook POST endpoint"""
+    try:
+        payload = await request.json()
+        return {
+            "status": "ok",
+            "message": "Webhook POST endpoint is working",
+            "received_data": payload,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Error processing webhook: {str(e)}",
+            "timestamp": datetime.now().isoformat()
+        }
 
 @router.post("/create-promo-code")
 async def create_promo_code(

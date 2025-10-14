@@ -555,3 +555,30 @@ async def get_webhook_info():
     except Exception as e:
         logger.error(f"Error getting webhook info: {e}")
         return None
+
+@router.get("/webhook/test")
+async def test_telegram_webhook():
+    """Test Telegram webhook endpoint for debugging"""
+    return {
+        "status": "ok",
+        "message": "Telegram webhook endpoint is working",
+        "timestamp": datetime.now().isoformat()
+    }
+
+@router.post("/webhook/test")
+async def test_telegram_webhook_post(request: Request):
+    """Test Telegram webhook POST endpoint"""
+    try:
+        payload = await request.json()
+        return {
+            "status": "ok",
+            "message": "Telegram webhook POST endpoint is working",
+            "received_data": payload,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Error processing telegram webhook: {str(e)}",
+            "timestamp": datetime.now().isoformat()
+        }
