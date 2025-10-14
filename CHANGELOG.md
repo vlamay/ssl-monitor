@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned
+- Slack integration with OAuth 2.0
+- Advanced analytics and SSL health metrics
+- API access for free plan users
+- Progressive Web App (PWA) mobile experience
+
+## [2.1.0] - 2025-01-XX
+
+### Added
+- **Free Plan Implementation**: Forever free plan with 10 domains monitoring
+- **SMS Notifications**: Multi-provider SMS support (Twilio + SMS.ru)
+- **Competitive Analysis**: Comprehensive market positioning analysis
+- **SMS Integration Guide**: Complete setup and troubleshooting documentation
+- **Early Adopter Pricing**: 50% off first month for first 100 customers
+- **Phone Number Validation**: International format validation for SMS
+- **SMS API Endpoints**: Full CRUD operations for SMS notifications
+- **Multi-Provider Support**: Automatic provider selection for SMS
+- **SSL-Specific Templates**: Custom SMS message templates
+- **Test SMS Functionality**: Built-in SMS testing capabilities
+
+### Changed
+- **Pricing Strategy**: Updated to include free plan and early adopter discounts
+- **Landing Page**: Updated CTA buttons to emphasize free plan
+- **Pricing Page**: Added free plan with "POPULAR" badge
+- **Notification System**: Integrated SMS into existing notification workflow
+- **Database Schema**: Added phone_number field to notifications table
+- **Market Position**: Tier 3 → Tier 2 competitive positioning
+
+### Fixed
+- **Competitive Gaps**: Closed critical gaps vs market leaders
+- **User Acquisition**: Removed entry barrier with free plan
+- **Notification Channels**: Added missing SMS industry standard
+- **Value Proposition**: Improved competitive positioning
+
+### Security
+- **Phone Number Encryption**: SMS phone numbers encrypted in database
+- **Provider Credentials**: Environment-only SMS provider configuration
+- **GDPR Compliance**: EU data residency maintained for SMS
+
+## [Unreleased] (Previous)
+
 ### Added
 - Open source migration with AGPLv3 license
 - GitLab CI/CD pipeline configuration
