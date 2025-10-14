@@ -15,6 +15,7 @@ class NotificationType(str, enum.Enum):
     WEBHOOK = "webhook"
     WHATSAPP = "whatsapp"
     SMS = "sms"
+    SLACK = "slack"
 
 
 class NotificationTrigger(str, enum.Enum):
@@ -48,6 +49,8 @@ class Notification(Base):
     webhook_headers = Column(Text, nullable=True)  # JSON string
     whatsapp_phone = Column(String(20), nullable=True)
     phone_number = Column(String(20), nullable=True)  # For SMS notifications
+    channel = Column(String(100), nullable=True)  # For Slack channel
+    team_id = Column(String(100), nullable=True)  # For Slack team ID
     
     # Triggers
     triggers = Column(Text, nullable=False)  # JSON array of NotificationTrigger

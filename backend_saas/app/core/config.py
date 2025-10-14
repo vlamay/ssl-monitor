@@ -61,6 +61,12 @@ class Settings(BaseSettings):
     TWILIO_PHONE_NUMBER: Optional[str] = Field(default=None, description="Twilio Phone Number")
     SMS_RU_API_ID: Optional[str] = Field(default=None, description="SMS.ru API ID")
     
+    # Slack Configuration
+    SLACK_CLIENT_ID: Optional[str] = Field(default=None, description="Slack OAuth Client ID")
+    SLACK_CLIENT_SECRET: Optional[str] = Field(default=None, description="Slack OAuth Client Secret")
+    SLACK_REDIRECT_URI: Optional[str] = Field(default=None, description="Slack OAuth Redirect URI")
+    SLACK_BOT_TOKEN: Optional[str] = Field(default=None, description="Slack Bot Token")
+    
     # Email
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587

@@ -16,6 +16,7 @@ from app.api.v1.endpoints.health import router as health_router
 from app.api.v1.whatsapp.contact import router as whatsapp_router
 from app.api.v1.calendly.booking import router as calendly_router
 from app.api.v1.sms.notifications import router as sms_router
+from app.api.v1.slack.integration import router as slack_router
 
 # Configure logging
 logging.basicConfig(
@@ -145,6 +146,12 @@ app.include_router(
     sms_router,
     prefix=f"{settings.API_V1_STR}/sms",
     tags=["SMS"]
+)
+
+app.include_router(
+    slack_router,
+    prefix=f"{settings.API_V1_STR}/slack",
+    tags=["Slack"]
 )
 
 # Root endpoint

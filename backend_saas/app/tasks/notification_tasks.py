@@ -19,6 +19,7 @@ import logging
 from app.services.whatsapp import whatsapp_service
 from app.services.telegram import telegram_service
 from app.services.sms import sms_service
+from app.services.slack import slack_service
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +83,8 @@ def send_notification(self, notification_id: int, trigger: str, data: Dict[str, 
                 result = await _send_whatsapp_notification(notification, user, monitor, trigger, data)
             elif notification.type == NotificationType.SMS:
                 result = await _send_sms_notification(notification, user, monitor, trigger, data)
+            elif notification.type == NotificationType.SLACK:
+                result = await _send_slack_notification(notification, user, monitor, trigger, data)
             else:
                 logger.error(f"Unknown notification type: {notification.type}")
                 return {"error": "Unknown notification type"}
@@ -485,6 +488,64 @@ async def _send_sms_notification(
             "phone_number": phone_number,
             "provider": result.get("provider"),
             "message_id": result.get("message_id"),
+            "error": result.get("error")
+        }
+        
+    except Exception as e:
+        return {
+            "status": "failed",
+            "error": str(e)
+        }
+
+
+async def _send_slack_notification(
+    notification: Notification,
+    user: User,
+    monitor: Optional[Monitor],
+    trigger: str,
+    data: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Send Slack notification"""
+    try:
+        channel = notification.channel
+        if not channel:
+            return {"status": "failed", "error": "Slack channel not configured"}
+        
+        # Format message based on trigger
+        if trigger.startswith("expires_"):
+            days_until_expiry = data.get("days_until_expiry", 0)
+            domain = monitor.domain if monitor else "your domain"
+            alert_type = "expires_soon"
+        elif trigger == "expired":
+            domain = monitor.domain if monitor else "your domain"
+            alert_type = "expired"
+        elif trigger == "welcome":
+            domain = "your SSL monitoring"
+            alert_type = "welcome"
+        elif trigger == "support":
+            domain = "support request"
+            alert_type = "support"
+        elif trigger == "demo_request":
+            domain = "demo request"
+            alert_type = "demo_request"
+        else:
+            domain = monitor.domain if monitor else "your domain"
+            alert_type = "generic"
+        
+        # Send Slack message
+        result = await slack_service.send_ssl_alert(
+            channel=channel,
+            domain=domain,
+            alert_type=alert_type,
+            days_remaining=data.get("days_until_expiry")
+        )
+        
+        return {
+            "status": "sent" if result.get("success") else "failed",
+            "channel": channel,
+            "domain": domain,
+            "alert_type": alert_type,
+            "timestamp": result.get("timestamp"),
             "error": result.get("error")
         }
         
