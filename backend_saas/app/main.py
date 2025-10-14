@@ -17,6 +17,7 @@ from app.api.v1.whatsapp.contact import router as whatsapp_router
 from app.api.v1.calendly.booking import router as calendly_router
 from app.api.v1.sms.notifications import router as sms_router
 from app.api.v1.slack.integration import router as slack_router
+from app.api.v1.analytics.dashboard import router as analytics_router
 
 # Configure logging
 logging.basicConfig(
@@ -152,6 +153,12 @@ app.include_router(
     slack_router,
     prefix=f"{settings.API_V1_STR}/slack",
     tags=["Slack"]
+)
+
+app.include_router(
+    analytics_router,
+    prefix=f"{settings.API_V1_STR}/analytics",
+    tags=["Analytics"]
 )
 
 # Root endpoint
