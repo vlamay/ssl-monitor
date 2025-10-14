@@ -168,6 +168,48 @@
             font-style: italic;
         }
 
+        .free-plan {
+            border: 2px solid #00d4aa;
+            position: relative;
+        }
+
+        .free-plan::before {
+            content: "POPULAR";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00d4aa;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .free-plan .plan-name {
+            color: #00d4aa;
+            font-weight: 700;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #00d4aa;
+            color: #00d4aa;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            background: #00d4aa;
+            color: white;
+        }
+
         .plan-description {
             color: #666;
             margin-bottom: 30px;
@@ -387,6 +429,32 @@
 
     <div class="pricing-container">
         <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card free-plan">
+                <div class="plan-name">Free</div>
+                <div class="plan-price">
+                    <span class="discounted-price">€0</span>
+                    <span class="price-period">/month</span>
+                    <div class="then-price">Forever free</div>
+                </div>
+                <div class="plan-description">
+                    Perfect for personal projects and testing
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 10 domains monitoring</li>
+                    <li><i class="fas fa-check"></i> Email notifications only</li>
+                    <li><i class="fas fa-check"></i> 30-day history</li>
+                    <li><i class="fas fa-check"></i> Basic SSL checks</li>
+                    <li><i class="fas fa-check"></i> Community support</li>
+                    <li><i class="fas fa-times"></i> No WhatsApp/SMS</li>
+                    <li><i class="fas fa-times"></i> No API access</li>
+                    <li><i class="fas fa-times"></i> No custom integrations</li>
+                </ul>
+                <button class="btn btn-outline" onclick="startFreeTrial()">
+                    Start Free
+                </button>
+            </div>
+
             <!-- Starter Plan -->
             <div class="pricing-card">
                 <div class="plan-name">Starter</div>
@@ -576,6 +644,51 @@
         function contactSales() {
             window.location.href = 'mailto:sales@sslmonitor.pro?subject=Enterprise Plan Inquiry';
         }
+
+        function startFreeTrial() {
+            const email = prompt('Zadejte váš email pro začátek FREE plánu:');
+            if (!email) return;
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                alert('Zadejte prosím platnou email adresu');
+                return;
+            }
+
+            // Redirect to user cabinet for free plan
+            window.location.href = `/user-cabinet.html?plan=free&email=${encodeURIComponent(email)}`;
+        }
+
+        function startPaidTrial(plan) {
+            const email = prompt('Zadejte váš email pro začátek trial:');
+            if (!email) return;
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                alert('Zadejte prosím platnou email adresu');
+                return;
+            }
+
+            // Redirect to user cabinet with selected plan
+            window.location.href = `/user-cabinet.html?plan=${plan}&email=${encodeURIComponent(email)}`;
+        }
+
+        // Track plan selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.buy-button, .btn-outline, .cta-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const planCard = this.closest('.pricing-card');
+                    const planName = planCard.querySelector('.plan-name').textContent.toLowerCase();
+                    
+                    // Analytics tracking
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'plan_selected', {
+                            'plan_name': planName,
+                            'event_category': 'pricing'
+                        });
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

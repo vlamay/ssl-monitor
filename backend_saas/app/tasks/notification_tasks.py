@@ -15,6 +15,11 @@ from app.models.user import User
 from sqlalchemy import select
 import logging
 
+# Import notification services
+from app.services.whatsapp import whatsapp_service
+from app.services.telegram import telegram_service
+from app.services.sms import sms_service
+
 logger = logging.getLogger(__name__)
 
 
@@ -75,6 +80,8 @@ def send_notification(self, notification_id: int, trigger: str, data: Dict[str, 
                 result = await _send_webhook_notification(notification, user, monitor, trigger, data)
             elif notification.type == NotificationType.WHATSAPP:
                 result = await _send_whatsapp_notification(notification, user, monitor, trigger, data)
+            elif notification.type == NotificationType.SMS:
+                result = await _send_sms_notification(notification, user, monitor, trigger, data)
             else:
                 logger.error(f"Unknown notification type: {notification.type}")
                 return {"error": "Unknown notification type"}
@@ -434,3 +441,55 @@ def send_bulk_notifications(notification_ids: List[int], trigger: str, data: Dic
         "failed": len([r for r in results if r.get("status") == "failed"]),
         "results": results
     }
+
+
+async def _send_sms_notification(
+    notification: Notification,
+    user: User,
+    monitor: Optional[Monitor],
+    trigger: str,
+    data: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Send SMS notification"""
+    try:
+        phone_number = notification.phone_number  # Assuming we add this field
+        if not phone_number:
+            return {"status": "failed", "error": "SMS phone number not configured"}
+        
+        # Format message based on trigger
+        if trigger.startswith("expires_"):
+            days_until_expiry = data.get("days_until_expiry", 0)
+            domain = monitor.domain if monitor else "your domain"
+            message = f"SSL Alert: {domain} expires in {days_until_expiry} days. Renew now!"
+        elif trigger == "expired":
+            domain = monitor.domain if monitor else "your domain"
+            message = f"URGENT: SSL certificate for {domain} has EXPIRED! Immediate action required."
+        elif trigger == "welcome":
+            message = f"Welcome to SSL Monitor Pro, {user.full_name}! Your SSL monitoring is now active."
+        elif trigger == "support":
+            message = f"SSL Monitor Pro Support: We received your {data.get('issue_type', 'support')} request. We'll contact you soon."
+        elif trigger == "demo_request":
+            message = f"Demo request for {data.get('company', 'your company')} confirmed. We'll schedule a call soon."
+        else:
+            # Generic message
+            message = f"SSL Monitor Pro Alert: {trigger} - {data.get('timestamp', 'now')}"
+            if monitor:
+                message += f" for {monitor.domain}"
+        
+        # Send SMS
+        result = await sms_service.send_sms(phone_number, message)
+        
+        return {
+            "status": "sent" if result.get("success") else "failed",
+            "message": message,
+            "phone_number": phone_number,
+            "provider": result.get("provider"),
+            "message_id": result.get("message_id"),
+            "error": result.get("error")
+        }
+        
+    except Exception as e:
+        return {
+            "status": "failed",
+            "error": str(e)
+        }

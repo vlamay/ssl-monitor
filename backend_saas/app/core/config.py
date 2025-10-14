@@ -55,6 +55,12 @@ class Settings(BaseSettings):
     WHATSAPP_PHONE: str = Field(default="+420721579603", description="WhatsApp Business phone number")
     WHATSAPP_BUSINESS_NAME: str = Field(default="SSL Monitor Pro", description="WhatsApp Business name")
     
+    # SMS Configuration
+    TWILIO_ACCOUNT_SID: Optional[str] = Field(default=None, description="Twilio Account SID")
+    TWILIO_AUTH_TOKEN: Optional[str] = Field(default=None, description="Twilio Auth Token")
+    TWILIO_PHONE_NUMBER: Optional[str] = Field(default=None, description="Twilio Phone Number")
+    SMS_RU_API_ID: Optional[str] = Field(default=None, description="SMS.ru API ID")
+    
     # Email
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
