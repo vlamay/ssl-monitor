@@ -686,7 +686,7 @@
         async function openCalendly() {
             try {
                 // Get Calendly configuration from backend
-                const response = await fetch('/api/v1/calendly/widget-config');
+                const response = await fetch('https://ssl-monitor-api.onrender.com/api/v1/calendly/widget-config');
                 const config = await response.json();
                 
                 if (config.available && config.widget_url) {

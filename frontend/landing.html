@@ -346,7 +346,7 @@
         <p>&copy; 2025 SSL Monitor Platform. All rights reserved.</p>
         <p style="margin-top: 10px;">
             <a href="/user-cabinet.html" style="color: white; margin: 0 15px;">Dashboard</a>
-            <a href="http://localhost:8000/docs" style="color: white; margin: 0 15px;">API Docs</a>
+            <a href="https://ssl-monitor-api.onrender.com/docs" style="color: white; margin: 0 15px;">API Docs</a>
             <a href="#" style="color: white; margin: 0 15px;">Privacy Policy</a>
             <a href="#" style="color: white; margin: 0 15px;">Terms of Service</a>
         </p>
@@ -538,7 +538,7 @@
         async function openCalendly() {
             try {
                 // Get Calendly configuration from backend
-                const response = await fetch('/api/v1/calendly/widget-config');
+                const response = await fetch('https://ssl-monitor-api.onrender.com/api/v1/calendly/widget-config');
                 const config = await response.json();
                 
                 if (config.available && config.widget_url) {

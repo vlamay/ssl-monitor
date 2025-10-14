@@ -46,6 +46,14 @@ services:
         fromService:
           type: secret
           name: telegram-bot-token
+      - key: CALENDLY_ACCESS_TOKEN
+        fromService:
+          type: secret
+          name: calendly-access-token
+      - key: WHATSAPP_PHONE
+        value: "+420721579603"
+      - key: WHATSAPP_BUSINESS_NAME
+        value: "SSL Monitor Pro"
       - key: FRONTEND_URL
         value: https://ssl-monitor.pages.dev
 
@@ -139,4 +147,6 @@ secrets:
   - name: stripe-webhook-secret
     sync: false
   - name: telegram-bot-token
+    sync: false
+  - name: calendly-access-token
     sync: false
