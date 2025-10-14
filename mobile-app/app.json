@@ -1,0 +1,39 @@
+{
+  "name": "SSLMonitorPro",
+  "displayName": "SSL Monitor Pro",
+  "version": "1.0.0",
+  "description": "SSL certificate monitoring and management",
+  "orientation": "portrait",
+  "icon": "./assets/icon.png",
+  "splash": {
+    "image": "./assets/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#ffffff"
+  },
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.sslmonitorpro.app",
+    "buildNumber": "1"
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/adaptive-icon.png",
+      "backgroundColor": "#ffffff"
+    },
+    "package": "com.sslmonitorpro.app",
+    "versionCode": 1,
+    "permissions": [
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE",
+      "android.permission.CAMERA",
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.VIBRATE",
+      "android.permission.RECEIVE_BOOT_COMPLETED",
+      "android.permission.WAKE_LOCK"
+    ]
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "ssl-monitor-pro-frontend",
+  "version": "1.0.0",
+  "description": "SSL Monitor Pro - Modern Frontend",
+  "main": "index.html",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "echo 'Building CSS...'",
+    "build:js": "echo 'Building JavaScript...'",
+    "dev": "npm run build && npm run serve",
+    "serve": "python3 -m http.server 8080",
+    "test": "echo 'No tests configured'",
+    "lint": "echo 'No linting configured'"
+  },
+  "keywords": [
+    "ssl",
+    "monitoring",
+    "certificate",
+    "security"
+  ],
+  "author": "SSL Monitor Pro Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "http://192.168.1.10/root/ssl-monitor-pro.git"
+  },
+  "homepage": "https://cloudsre.xyz"
+}

@@ -1,0 +1,53 @@
+# 🔧 Environment Variables Template
+# Copy these to Render.com service settings
+
+# === DATABASE ===
+DATABASE_URL=postgresql://ssluser:your_password@dpg-xxxxx:5432/sslmonitor
+# Get from: Render PostgreSQL service → Info → Internal Database URL
+
+# === REDIS ===
+REDIS_URL=redis://red-xxxxx:6379
+# Get from: Render Redis service → Info → Internal Redis URL
+
+# === STRIPE (Test Keys) ===
+STRIPE_SECRET_KEY=YOUR_STRIPE_SECRET_KEY_HERE
+STRIPE_PUBLISHABLE_KEY=pk_test_51SGoJM20i6fmlbYduMC9YLdC5PU1TEE9i1MOIM8mGcyAZY1Lx3TYuu02w8zGHbKsSRVTMuWUaz1yVBbHUG8Iivro00XaWGmEmY
+
+# === STRIPE WEBHOOK ===
+STRIPE_WEBHOOK_SECRET=whsec_xxxxx
+# Get from: Stripe Dashboard → Developers → Webhooks → Signing secret
+
+# === TELEGRAM (Optional) ===
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+TELEGRAM_CHAT_ID=123456789
+# Create bot: https://t.me/BotFather
+# Get chat ID: https://t.me/userinfobot
+
+# === PYTHON ===
+PYTHON_VERSION=3.11
+
+# === DOMAIN (Optional) ===
+DOMAIN=https://ssl-monitor-backend.onrender.com
+# Or your custom domain: https://api.cloudsre.xyz
+
+# === EMAIL (Optional) ===
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=vla.maidaniuk@gmail.com
+SMTP_PASSWORD=your_app_password
+# Enable 2FA and create app password in Gmail
+
+# === SECURITY ===
+SECRET_KEY=your-secret-key-here-change-this-in-production
+# Generate with: python -c "import secrets; print(secrets.token_urlsafe(32))"
+
+# === MONITORING ===
+LOG_LEVEL=INFO
+SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+# Optional: Error tracking with Sentry
+
+# === FEATURE FLAGS ===
+ENABLE_TELEGRAM_ALERTS=true
+ENABLE_EMAIL_ALERTS=true
+ENABLE_STRIPE_WEBHOOKS=true
+TRIAL_DAYS=14

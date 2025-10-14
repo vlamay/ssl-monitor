@@ -1,0 +1,161 @@
+═══════════════════════════════════════════════════════════════
+  GITLAB INSTALLATION - COMMANDS CHEAT SHEET
+═══════════════════════════════════════════════════════════════
+
+Server IP:  193.179.120.33
+Domain:     gitlab.cloudsre.xyz
+Email:      sre.engineer.vm@gmail.com
+
+═══════════════════════════════════════════════════════════════
+
+📋 STEP 1: CLOUDFLARE DNS SETUP
+═══════════════════════════════════════════════════════════════
+
+1. Open: https://dash.cloudflare.com/
+2. Select: cloudsre.xyz
+3. Go to: DNS → Records → Add record
+
+Settings:
+   Type:    A
+   Name:    gitlab
+   Content: 193.179.120.33
+   TTL:     Auto
+   Proxy:   ⚪ DNS only (gray cloud - IMPORTANT!)
+
+═══════════════════════════════════════════════════════════════
+
+📦 STEP 2: COPY SCRIPT TO SERVER
+═══════════════════════════════════════════════════════════════
+
+# On your local machine (in project directory):
+cd /home/vmaidaniuk/Cursor/ssl-monitor-final
+scp gitlab-install.sh root@193.179.120.33:/root/
+
+═══════════════════════════════════════════════════════════════
+
+🚀 STEP 3: CONNECT AND INSTALL
+═══════════════════════════════════════════════════════════════
+
+# Connect to server:
+ssh root@193.179.120.33
+
+# Run installation:
+chmod +x gitlab-install.sh
+sudo bash gitlab-install.sh sre.engineer.vm@gmail.com
+
+# Wait 10-15 minutes...
+# SAVE THE ROOT PASSWORD WHEN IT APPEARS!
+
+═══════════════════════════════════════════════════════════════
+
+🔐 STEP 4: FIRST LOGIN
+═══════════════════════════════════════════════════════════════
+
+Open: https://gitlab.cloudsre.xyz
+
+Login:
+   Username: root
+   Password: <from installation output>
+
+Change password immediately:
+   Avatar → Preferences → Password
+
+═══════════════════════════════════════════════════════════════
+
+🟠 STEP 5: ENABLE CLOUDFLARE PROXY
+═══════════════════════════════════════════════════════════════
+
+1. Cloudflare → DNS → gitlab record
+2. Click gray cloud 🌐 to make it orange 🟠
+3. SSL/TLS → Overview → Set to "Full (strict)"
+
+═══════════════════════════════════════════════════════════════
+
+✅ VERIFICATION COMMANDS (on server)
+═══════════════════════════════════════════════════════════════
+
+# Check status
+sudo gitlab-ctl status
+
+# Health check
+sudo gitlab-rake gitlab:check
+
+# View logs
+sudo gitlab-ctl tail
+
+# Restart if needed
+sudo gitlab-ctl restart
+
+═══════════════════════════════════════════════════════════════
+
+🔄 UPDATE LOCAL GIT REMOTE
+═══════════════════════════════════════════════════════════════
+
+# On your local machine:
+cd /home/vmaidaniuk/Cursor/ssl-monitor-final
+
+# Replace origin
+git remote set-url origin https://gitlab.cloudsre.xyz/root/ssl-monitor-final.git
+
+# Or add as second remote
+git remote add gitlab https://gitlab.cloudsre.xyz/root/ssl-monitor-final.git
+
+# Verify
+git remote -v
+
+═══════════════════════════════════════════════════════════════
+
+🚨 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+502 Error:
+   sudo gitlab-ctl restart
+   # Wait 5 minutes
+
+Forgot password:
+   sudo cat /etc/gitlab/initial_root_password
+   # OR reset:
+   sudo gitlab-rake "gitlab:password:reset[root]"
+
+SSL issues:
+   # Disable Cloudflare proxy (gray cloud)
+   sudo gitlab-ctl reconfigure
+   # Wait 5 mins, then re-enable proxy
+
+View logs:
+   sudo gitlab-ctl tail nginx
+   sudo gitlab-ctl tail puma
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+Quick Start:     GITLAB_QUICK_START.md
+Full Guide:      GITLAB_MIGRATION_GUIDE.md
+Checklist:       GITLAB_CHECKLIST.md
+This Guide:      INSTALL_INSTRUCTIONS.md
+
+═══════════════════════════════════════════════════════════════
+
+🎯 NEXT STEPS AFTER INSTALLATION
+═══════════════════════════════════════════════════════════════
+
+1. Import repository from GitHub
+2. Add CI/CD variables
+3. Test pipeline
+4. Setup backups
+5. Create team accounts
+
+═══════════════════════════════════════════════════════════════
+
+QUICK REFERENCE:
+
+Server IP:       193.179.120.33
+SSH:             ssh root@193.179.120.33
+GitLab URL:      https://gitlab.cloudsre.xyz
+Admin User:      root
+Admin Email:     sre.engineer.vm@gmail.com
+
+═══════════════════════════════════════════════════════════════
+

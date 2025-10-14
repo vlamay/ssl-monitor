@@ -1,0 +1,94 @@
+services:
+  # Backend API
+  - type: web
+    name: ssl-monitor-api
+    env: python
+    region: frankfurt
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 4
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ssl-monitor-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://cloudsre.xyz
+      - key: BACKEND_URL
+        value: https://ssl-monitor-api.onrender.com
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+    
+  # PostgreSQL Database
+  - type: pserv
+    name: ssl-monitor-db
+    env: docker
+    plan: free
+    region: frankfurt
+    
+  # Redis Cache
+  - type: redis
+    name: ssl-monitor-redis
+    plan: free
+    region: frankfurt
+    
+  # Celery Worker
+  - type: worker
+    name: ssl-monitor-worker
+    env: python
+    region: frankfurt
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: celery -A celery_worker worker --loglevel=info --pool=solo
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ssl-monitor-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+    
+  # Celery Beat (Scheduler)
+  - type: worker
+    name: ssl-monitor-beat
+    env: python
+    region: frankfurt
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: celery -A celery_worker beat --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ssl-monitor-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString

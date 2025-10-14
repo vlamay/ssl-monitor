@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "Monitorear certificados SSL",
+    "subtitle": "Recibe alertas instantáneas cuando tus certificados SSL están a punto de expirar",
+    "description": "Nunca pierdas la expiración de un certificado SSL. Recibe notificaciones proactivas por email, SMS o Slack.",
+    "cta": "Comenzar prueba gratuita",
+    "trial": "Prueba gratuita de 7 días • Sin tarjeta de crédito • Cancela en cualquier momento"
+  },
+  "pricing": {
+    "title": "Elige tu plan",
+    "subtitle": "Todos los planes incluyen prueba gratuita de 7 días",
+    "starter": {
+      "name": "Starter",
+      "price": "€19",
+      "period": "/mes",
+      "description": "Perfecto para sitios web pequeños",
+      "features": [
+        "Hasta 10 dominios",
+        "Alertas por email",
+        "Historial de 7 días",
+        "Soporte por email"
+      ]
+    },
+    "professional": {
+      "name": "Profesional",
+      "price": "€49",
+      "period": "/mes",
+      "description": "Ideal para empresas en crecimiento",
+      "features": [
+        "Hasta 50 dominios",
+        "Todos los tipos de alertas",
+        "Historial de 90 días",
+        "Soporte prioritario"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "€149",
+      "period": "/mes",
+      "description": "Para grandes organizaciones",
+      "features": [
+        "Dominios ilimitados",
+        "Todas las características",
+        "Historial de 1 año",
+        "Soporte telefónico 24/7"
+      ]
+    }
+  },
+  "features": {
+    "title": "¿Por qué elegir SSL Monitor Pro?",
+    "monitoring": {
+      "title": "Monitoreo 24/7",
+      "description": "Monitoreo continuo de tus certificados SSL con alertas instantáneas"
+    },
+    "alerts": {
+      "title": "Múltiples tipos de alertas",
+      "description": "Notificaciones por email, SMS, Slack y Telegram"
+    },
+    "security": {
+      "title": "Seguridad empresarial",
+      "description": "Seguridad de nivel bancario con transmisión de datos encriptados"
+    },
+    "support": {
+      "title": "Soporte experto",
+      "description": "Soporte 24/7 de expertos en seguridad SSL"
+    }
+  },
+  "meta": {
+    "title": "Monitor de certificados SSL - Nunca pierdas una expiración",
+    "description": "Monitoreo profesional de certificados SSL con alertas instantáneas. Prueba gratuita de 7 días, sin tarjeta de crédito."
+  },
+  "buttons": {
+    "get_started": "Comenzar",
+    "learn_more": "Saber más",
+    "contact_sales": "Contactar ventas",
+    "start_trial": "Comenzar prueba gratuita"
+  }
+}

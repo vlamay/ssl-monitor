@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "SSL-Zertifikate überwachen",
+    "subtitle": "Erhalten Sie sofortige Benachrichtigungen, wenn Ihre SSL-Zertifikate ablaufen",
+    "description": "Verpassen Sie nie wieder ein ablaufendes SSL-Zertifikat. Erhalten Sie proaktive Benachrichtigungen per E-Mail, SMS oder Slack.",
+    "cta": "Kostenlose Testversion starten",
+    "trial": "7-tägige kostenlose Testversion • Keine Kreditkarte erforderlich • Jederzeit kündbar"
+  },
+  "pricing": {
+    "title": "Wählen Sie Ihren Plan",
+    "subtitle": "Alle Pläne beinhalten 7-tägige kostenlose Testversion",
+    "starter": {
+      "name": "Starter",
+      "price": "€19",
+      "period": "/Monat",
+      "description": "Perfekt für kleine Websites",
+      "features": [
+        "Bis zu 10 Domains",
+        "E-Mail-Benachrichtigungen",
+        "7 Tage Verlauf",
+        "E-Mail-Support"
+      ]
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "€49",
+      "period": "/Monat", 
+      "description": "Ideal für wachsende Unternehmen",
+      "features": [
+        "Bis zu 50 Domains",
+        "Alle Benachrichtigungstypen",
+        "90 Tage Verlauf",
+        "Prioritäts-Support"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "€149",
+      "period": "/Monat",
+      "description": "Für große Organisationen", 
+      "features": [
+        "Unbegrenzte Domains",
+        "Alle Funktionen",
+        "1 Jahr Verlauf",
+        "24/7 Telefon-Support"
+      ]
+    }
+  },
+  "features": {
+    "title": "Warum SSL Monitor Pro wählen?",
+    "monitoring": {
+      "title": "24/7 Überwachung",
+      "description": "Kontinuierliche Überwachung Ihrer SSL-Zertifikate mit sofortigen Benachrichtigungen"
+    },
+    "alerts": {
+      "title": "Mehrere Benachrichtigungstypen",
+      "description": "E-Mail-, SMS-, Slack- und Telegram-Benachrichtigungen"
+    },
+    "security": {
+      "title": "Unternehmenssicherheit",
+      "description": "Banken-Sicherheitsniveau mit verschlüsselter Datenübertragung"
+    },
+    "support": {
+      "title": "Experten-Support",
+      "description": "24/7 Support von SSL-Sicherheitsexperten"
+    }
+  },
+  "meta": {
+    "title": "SSL-Zertifikat-Monitor - Verpassen Sie nie ein Ablaufdatum",
+    "description": "Professionelle SSL-Zertifikat-Überwachung mit sofortigen Benachrichtigungen. 7-tägige kostenlose Testversion, keine Kreditkarte erforderlich."
+  },
+  "buttons": {
+    "get_started": "Loslegen",
+    "learn_more": "Mehr erfahren",
+    "contact_sales": "Vertrieb kontaktieren",
+    "start_trial": "Kostenlose Testversion starten"
+  }
+}

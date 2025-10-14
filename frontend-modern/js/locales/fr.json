@@ -1,0 +1,78 @@
+{
+  "hero": {
+    "title": "Surveiller les certificats SSL",
+    "subtitle": "Recevez des alertes instantanées lorsque vos certificats SSL sont sur le point d'expirer",
+    "description": "Ne manquez plus jamais l'expiration d'un certificat SSL. Recevez des notifications proactives par email, SMS ou Slack.",
+    "cta": "Commencer l'essai gratuit",
+    "trial": "Essai gratuit de 7 jours • Aucune carte de crédit requise • Annulation à tout moment"
+  },
+  "pricing": {
+    "title": "Choisissez votre plan",
+    "subtitle": "Tous les plans incluent un essai gratuit de 7 jours",
+    "starter": {
+      "name": "Starter",
+      "price": "€19",
+      "period": "/mois",
+      "description": "Parfait pour les petits sites web",
+      "features": [
+        "Jusqu'à 10 domaines",
+        "Alertes par email",
+        "Historique de 7 jours",
+        "Support par email"
+      ]
+    },
+    "professional": {
+      "name": "Professionnel",
+      "price": "€49",
+      "period": "/mois",
+      "description": "Idéal pour les entreprises en croissance",
+      "features": [
+        "Jusqu'à 50 domaines",
+        "Tous les types d'alertes",
+        "Historique de 90 jours",
+        "Support prioritaire"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "€149",
+      "period": "/mois",
+      "description": "Pour les grandes organisations",
+      "features": [
+        "Domaines illimités",
+        "Toutes les fonctionnalités",
+        "Historique d'1 an",
+        "Support téléphonique 24/7"
+      ]
+    }
+  },
+  "features": {
+    "title": "Pourquoi choisir SSL Monitor Pro ?",
+    "monitoring": {
+      "title": "Surveillance 24/7",
+      "description": "Surveillance continue de vos certificats SSL avec des alertes instantanées"
+    },
+    "alerts": {
+      "title": "Types d'alertes multiples",
+      "description": "Notifications par email, SMS, Slack et Telegram"
+    },
+    "security": {
+      "title": "Sécurité d'entreprise",
+      "description": "Sécurité de niveau bancaire avec transmission de données cryptées"
+    },
+    "support": {
+      "title": "Support expert",
+      "description": "Support 24/7 d'experts en sécurité SSL"
+    }
+  },
+  "meta": {
+    "title": "Moniteur de certificats SSL - Ne manquez jamais une expiration",
+    "description": "Surveillance professionnelle des certificats SSL avec alertes instantanées. Essai gratuit de 7 jours, aucune carte de crédit requise."
+  },
+  "buttons": {
+    "get_started": "Commencer",
+    "learn_more": "En savoir plus",
+    "contact_sales": "Contacter les ventes",
+    "start_trial": "Commencer l'essai gratuit"
+  }
+}

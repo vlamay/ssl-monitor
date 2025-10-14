@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Monitor Pro - Never Miss SSL Certificate Expiry Again</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-50" x-data="{ mobileMenu: false, scrolled: false }" 
+      x-init="window.addEventListener('scroll', () => { scrolled = window.pageYOffset > 20 })">
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" 
+         :class="scrolled ? 'bg-white shadow-lg' : 'bg-transparent'">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <span class="text-2xl">🔒</span>
+                    <span class="ml-2 text-xl font-bold" 
+                          :class="scrolled ? 'text-gray-900' : 'text-white'">
+                        SSL Monitor Pro
+                    </span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="transition-colors" 
+                       :class="scrolled ? 'text-gray-700 hover:text-purple-600' : 'text-white hover:text-purple-200'">
+                        Features
+                    </a>
+                    <a href="#pricing" class="transition-colors" 
+                       :class="scrolled ? 'text-gray-700 hover:text-purple-600' : 'text-white hover:text-purple-200'">
+                        Pricing
+                    </a>
+                    <a href="#docs" class="transition-colors" 
+                       :class="scrolled ? 'text-gray-700 hover:text-purple-600' : 'text-white hover:text-purple-200'">
+                        Docs
+                    </a>
+                    <a href="dashboard.html" 
+                       class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        Dashboard
+                    </a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden">
+                    <svg class="w-6 h-6" :class="scrolled ? 'text-gray-900' : 'text-white'" 
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenu" x-transition class="md:hidden bg-white shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#features" class="block px-3 py-2 text-gray-700 hover:bg-purple-50 rounded">Features</a>
+                <a href="#pricing" class="block px-3 py-2 text-gray-700 hover:bg-purple-50 rounded">Pricing</a>
+                <a href="#docs" class="block px-3 py-2 text-gray-700 hover:bg-purple-50 rounded">Docs</a>
+                <a href="dashboard.html" class="block px-3 py-2 bg-purple-600 text-white rounded">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg pt-32 pb-20 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="mb-6">
+                <span class="inline-block bg-purple-900 bg-opacity-30 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    🚀 Trusted by 1000+ companies
+                </span>
+            </div>
+            
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                Never Miss SSL Certificate<br>
+                Expiry Again
+            </h1>
+            
+            <p class="text-xl text-purple-100 mb-8 max-w-3xl mx-auto">
+                24/7 automated SSL monitoring with instant alerts. Protect your business from
+                certificate expiry and keep your customers' trust.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <a href="dashboard.html" 
+                   class="bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105">
+                    Start Free Trial
+                </a>
+                <a href="#features" 
+                   class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-all">
+                    Learn More
+                </a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white">1M+</div>
+                    <div class="text-purple-200 mt-2">SSL Checks</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white">99.9%</div>
+                    <div class="text-purple-200 mt-2">Uptime</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-white">&lt;1min</div>
+                    <div class="text-purple-200 mt-2">Alert Time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    Enterprise-Grade SSL Monitoring
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Everything you need to keep your SSL certificates up to date
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <span class="text-2xl">🔍</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">
+                        24/7 Monitoring
+                    </h3>
+                    <p class="text-gray-600">
+                        Continuous SSL certificate monitoring with automatic checks every hour.
+                        Never miss an expiration again.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <span class="text-2xl">⚡</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">
+                        Instant Alerts
+                    </h3>
+                    <p class="text-gray-600">
+                        Get notified via Email, Slack, Telegram, or Webhook when certificates are expiring soon.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <span class="text-2xl">📊</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">
+                        Advanced Analytics
+                    </h3>
+                    <p class="text-gray-600">
+                        Comprehensive reports and insights into your SSL certificate health and history.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <span class="text-2xl">🌍</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">
+                        Global Coverage
+                    </h3>
+                    <p class="text-gray-600">
+                        Monitor domains from multiple locations worldwide with low latency checks.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <span class="text-2xl">🔐</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">
+                        GDPR Compliant
+                    </h3>
+                    <p class="text-gray-600">
+                        Enterprise-grade security with full GDPR compliance and data encryption.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                        <span class="text-2xl">🚀</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">
+                        Easy Integration
+                    </h3>
+                    <p class="text-gray-600">
+                        RESTful API and webhooks for seamless integration with your existing tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-4 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    Simple, Transparent Pricing
+                </h2>
+                <p class="text-xl text-gray-600">
+                    7-day free trial. No credit card required.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Starter Plan -->
+                <div class="bg-white rounded-xl shadow-lg p-8 border-2 border-gray-200 hover:border-purple-500 transition-all">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">€19</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>10 domains monitoring</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Email alerts</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Basic dashboard</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>24/7 monitoring</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="dashboard.html" 
+                       class="block w-full bg-purple-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                        Start Free Trial
+                    </a>
+                </div>
+                
+                <!-- Professional Plan -->
+                <div class="bg-white rounded-xl shadow-2xl p-8 border-2 border-purple-600 transform scale-105 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                            Most Popular
+                        </span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Professional</h3>
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">€49</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>50 domains monitoring</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Multi-channel alerts</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Advanced analytics</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Compliance reports</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Priority support</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="dashboard.html" 
+                       class="block w-full bg-purple-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                        Start Free Trial
+                    </a>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="bg-white rounded-xl shadow-lg p-8 border-2 border-gray-200 hover:border-purple-500 transition-all">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                        <div class="flex items-baseline">
+                            <span class="text-5xl font-bold text-gray-900">€149</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Unlimited domains</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Custom integrations</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>White-label option</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>Dedicated account manager</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✓</span>
+                            <span>SLA guarantee</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="mailto:vla.maidaniuk@gmail.com" 
+                       class="block w-full bg-gray-900 text-white text-center py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
+                        Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 gradient-bg">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-white mb-6">
+                Ready to Get Started?
+            </h2>
+            <p class="text-xl text-purple-100 mb-8">
+                Join 1000+ companies monitoring their SSL certificates with confidence
+            </p>
+            <a href="dashboard.html" 
+               class="inline-block bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105">
+                Start Your Free Trial
+            </a>
+            <p class="text-purple-200 mt-4">
+                No credit card required • 7-day free trial • Cancel anytime
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12 px-4">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center mb-4">
+                    <span class="text-2xl">🔒</span>
+                    <span class="ml-2 text-xl font-bold text-white">SSL Monitor Pro</span>
+                </div>
+                <p class="text-gray-400">
+                    Enterprise SSL certificate monitoring made simple.
+                </p>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold text-white mb-4">Product</h4>
+                <ul class="space-y-2">
+                    <li><a href="#features" class="hover:text-white">Features</a></li>
+                    <li><a href="#pricing" class="hover:text-white">Pricing</a></li>
+                    <li><a href="dashboard.html" class="hover:text-white">Dashboard</a></li>
+                    <li><a href="https://ssl-monitor-api.onrender.com/docs" class="hover:text-white">API Docs</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold text-white mb-4">Company</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white">About</a></li>
+                    <li><a href="#" class="hover:text-white">Blog</a></li>
+                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                    <li><a href="mailto:vla.maidaniuk@gmail.com" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold text-white mb-4">Contact</h4>
+                <ul class="space-y-2">
+                    <li>Email: vla.maidaniuk@gmail.com</li>
+                    <li>Tel: +420 721 579 603</li>
+                    <li>
+                        <a href="https://linkedin.com/in/maidaniuk" class="hover:text-white">
+                            LinkedIn
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
+            <p>© 2025 SSL Monitor Pro. Built with ❤️ by DevOps engineers for DevOps teams.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
+

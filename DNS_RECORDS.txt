@@ -1,0 +1,79 @@
+# 🌐 Cloudflare DNS Records для cloudsre.xyz
+
+# === ОСНОВНЫЕ ЗАПИСИ ===
+
+# 1. API Backend (обязательно)
+Type: CNAME
+Name: api
+Target: ssl-monitor-backend.onrender.com
+Proxy: ON (orange cloud)
+TTL: Auto
+
+# 2. Root Domain (если хотите основной сайт)
+Type: CNAME  
+Name: @
+Target: ssl-monitor-backend.onrender.com
+Proxy: ON (orange cloud)
+TTL: Auto
+
+# 3. WWW (если нужен)
+Type: CNAME
+Name: www
+Target: ssl-monitor-backend.onrender.com
+Proxy: ON (orange cloud)
+TTL: Auto
+
+# 4. Frontend (если отдельный фронтенд)
+Type: CNAME
+Name: app
+Target: ssl-monitor-backend.onrender.com
+Proxy: ON (orange cloud)
+TTL: Auto
+
+# === ДОПОЛНИТЕЛЬНЫЕ ЗАПИСИ ===
+
+# 5. Health Check (для мониторинга)
+Type: CNAME
+Name: health
+Target: ssl-monitor-backend.onrender.com
+Proxy: OFF (grey cloud)
+TTL: Auto
+
+# 6. Docs (для документации API)
+Type: CNAME
+Name: docs
+Target: ssl-monitor-backend.onrender.com
+Proxy: ON (orange cloud)
+TTL: Auto
+
+# === ИНСТРУКЦИЯ ПО ДОБАВЛЕНИЮ ===
+
+1. Войдите в Cloudflare Dashboard
+2. Выберите домен: cloudsre.xyz
+3. Перейдите в DNS → Records
+4. Нажмите "Add record"
+5. Заполните данные из таблицы выше
+6. Нажмите "Save"
+
+# === ВАЖНЫЕ ЗАМЕЧАНИЯ ===
+
+- "Proxy: ON" = Orange cloud (использует CDN Cloudflare)
+- "Proxy: OFF" = Grey cloud (прямое соединение)
+- Для API лучше использовать Proxy: ON для кеширования
+- TTL: Auto = автоматическое управление кешем
+
+# === ПРОВЕРКА ПОСЛЕ НАСТРОЙКИ ===
+
+# Через 2-5 минут проверьте:
+curl https://api.cloudsre.xyz/health
+curl https://cloudsre.xyz/health
+
+# Должны получить:
+# {"status":"healthy","database":"connected"}
+
+# === ПОРЯДОК ДОБАВЛЕНИЯ ===
+
+1. Сначала добавьте api.cloudsre.xyz
+2. Подождите 5 минут
+3. Проверьте работу
+4. Добавьте остальные записи

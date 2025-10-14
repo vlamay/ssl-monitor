@@ -1,0 +1,84 @@
+{
+  "hero": {
+    "title": "Monitor SSL Certificates",
+    "subtitle": "Get instant alerts when your SSL certificates are about to expire",
+    "description": "Never miss an SSL certificate expiration again. Get proactive notifications via email, SMS, or Slack.",
+    "cta": "Start Free Trial",
+    "trial": "7-day free trial • No credit card required • Cancel anytime"
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "All plans include 7-day free trial",
+    "starter": {
+      "name": "Starter",
+      "price": "€19",
+      "period": "/month",
+      "description": "Perfect for small websites",
+      "features": [
+        "Up to 10 domains",
+        "Email alerts",
+        "7 days history",
+        "Email support"
+      ]
+    },
+    "professional": {
+      "name": "Professional", 
+      "price": "€49",
+      "period": "/month",
+      "description": "Ideal for growing businesses",
+      "features": [
+        "Up to 50 domains",
+        "All alert types",
+        "90 days history",
+        "Priority support"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "€149", 
+      "period": "/month",
+      "description": "For large organizations",
+      "features": [
+        "Unlimited domains",
+        "All features",
+        "1 year history",
+        "24/7 phone support"
+      ]
+    }
+  },
+  "features": {
+    "title": "Why Choose SSL Monitor Pro?",
+    "monitoring": {
+      "title": "24/7 Monitoring",
+      "description": "Continuous monitoring of your SSL certificates with instant alerts"
+    },
+    "alerts": {
+      "title": "Multiple Alert Types", 
+      "description": "Email, SMS, Slack, and Telegram notifications"
+    },
+    "security": {
+      "title": "Enterprise Security",
+      "description": "Bank-level security with encrypted data transmission"
+    },
+    "support": {
+      "title": "Expert Support",
+      "description": "24/7 support from SSL security experts"
+    }
+  },
+  "meta": {
+    "title": "SSL Certificate Monitor - Never Miss an Expiration",
+    "description": "Professional SSL certificate monitoring with instant alerts. 7-day free trial, no credit card required."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "api_docs": "API Docs",
+    "dashboard": "Dashboard"
+  },
+  "buttons": {
+    "get_started": "Get Started",
+    "learn_more": "See How It Works",
+    "contact_sales": "Contact Sales",
+    "start_trial": "Start Free Trial"
+  }
+}

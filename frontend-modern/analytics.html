@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" x-data="analyticsApp()">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - SSL Monitor Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <i class="fas fa-shield-alt text-blue-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">SSL Monitor Pro</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                    <a href="analytics.html" class="text-blue-600 font-medium">Analytics</a>
+                    <a href="notifications.html" class="text-gray-600 hover:text-gray-900">Notifications</a>
+                    <button @click="toggleLanguage" class="flex items-center space-x-1 text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-globe"></i>
+                        <span x-text="currentLanguage.toUpperCase()"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
+            <p class="text-gray-600 mt-2">Comprehensive insights into your SSL certificate monitoring</p>
+        </div>
+
+        <!-- Period Selector -->
+        <div class="mb-6">
+            <div class="flex space-x-2">
+                <button 
+                    @click="setPeriod('1d')" 
+                    :class="period === '1d' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'"
+                    class="px-4 py-2 rounded-lg border hover:bg-gray-50 transition-colors">
+                    Last 24 Hours
+                </button>
+                <button 
+                    @click="setPeriod('7d')" 
+                    :class="period === '7d' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'"
+                    class="px-4 py-2 rounded-lg border hover:bg-gray-50 transition-colors">
+                    Last 7 Days
+                </button>
+                <button 
+                    @click="setPeriod('30d')" 
+                    :class="period === '30d' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'"
+                    class="px-4 py-2 rounded-lg border hover:bg-gray-50 transition-colors">
+                    Last 30 Days
+                </button>
+                <button 
+                    @click="setPeriod('90d')" 
+                    :class="period === '90d' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'"
+                    class="px-4 py-2 rounded-lg border hover:bg-gray-50 transition-colors">
+                    Last 90 Days
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div x-show="loading" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+
+        <!-- Analytics Content -->
+        <div x-show="!loading" class="space-y-6">
+            <!-- Key Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100">
+                            <i class="fas fa-shield-alt text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Domains</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="analytics?.domain_analytics?.total_domains || 0"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100">
+                            <i class="fas fa-check-circle text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Domains</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="analytics?.domain_analytics?.active_domains || 0"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-100">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Expiring Soon</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="analytics?.domain_analytics?.domains_expiring_soon || 0"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-red-100">
+                            <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Expired</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="analytics?.domain_analytics?.domains_expired || 0"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- SSL Trends Chart -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">SSL Certificate Trends</h3>
+                    <div class="h-80">
+                        <canvas id="sslTrendsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Alert Analytics Chart -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Alert Distribution</h3>
+                    <div class="h-80">
+                        <canvas id="alertChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <template x-for="metric in analytics?.performance_metrics || []" :key="metric.metric">
+                        <div class="text-center">
+                            <div class="flex items-center justify-center mb-2">
+                                <span :class="getMetricTrendClass(metric.trend)" class="text-2xl">
+                                    <i :class="getMetricTrendIcon(metric.trend)"></i>
+                                </span>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-900" x-text="formatMetricValue(metric.value)"></p>
+                            <p class="text-sm text-gray-600" x-text="metric.unit"></p>
+                            <p class="text-sm font-medium" x-text="metric.metric"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Top Domains and Issuers -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Top Domains -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Monitored Domains</h3>
+                    <div class="space-y-3">
+                        <template x-for="(domain, index) in analytics?.domain_analytics?.top_domains || []" :key="domain.domain">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <span class="text-sm font-medium text-gray-500 mr-2" x-text="index + 1"></span>
+                                    <span class="font-medium text-gray-900" x-text="domain.domain"></span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span :class="getStatusClass(domain.status)" class="px-2 py-1 text-xs font-medium rounded-full" x-text="domain.status"></span>
+                                    <span class="text-sm text-gray-600" x-text="domain.days_left + ' days'"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Top Issuers -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Certificate Issuers</h3>
+                    <div class="space-y-3">
+                        <template x-for="issuer in analytics?.domain_analytics?.top_issuers || []" :key="issuer.name">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-certificate text-blue-600 mr-2"></i>
+                                    <span class="font-medium text-gray-900" x-text="issuer.name"></span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm text-gray-600" x-text="issuer.count + ' certs'"></span>
+                                    <span class="text-sm font-medium text-blue-600" x-text="issuer.percentage + '%'"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">AI Insights & Recommendations</h3>
+                <div class="space-y-3">
+                    <template x-for="insight in analytics?.insights || []" :key="insight">
+                        <div class="flex items-start p-4 bg-blue-50 rounded-lg">
+                            <i class="fas fa-lightbulb text-blue-600 mt-1 mr-3"></i>
+                            <p class="text-gray-700" x-text="insight"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Export Options -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Export Data</h3>
+                <div class="flex space-x-4">
+                    <button @click="exportData('json')" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-download mr-2"></i>
+                        Export JSON
+                    </button>
+                    <button @click="exportData('csv')" class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-file-csv mr-2"></i>
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyticsApp() {
+            return {
+                loading: true,
+                period: '7d',
+                analytics: null,
+                sslTrendsChart: null,
+                alertChart: null,
+                currentLanguage: 'en',
+
+                async init() {
+                    await this.loadAnalytics();
+                    this.setupCharts();
+                },
+
+                async loadAnalytics() {
+                    this.loading = true;
+                    try {
+                        const response = await fetch(`${this.getApiBaseUrl()}/analytics/dashboard?period=${this.period}`);
+                        if (response.ok) {
+                            this.analytics = await response.json();
+                            this.updateCharts();
+                        }
+                    } catch (error) {
+                        console.error('Error loading analytics:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                setPeriod(newPeriod) {
+                    this.period = newPeriod;
+                    this.loadAnalytics();
+                },
+
+                setupCharts() {
+                    // SSL Trends Chart
+                    const sslCtx = document.getElementById('sslTrendsChart').getContext('2d');
+                    this.sslTrendsChart = new Chart(sslCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [
+                                {
+                                    label: 'Healthy',
+                                    data: [],
+                                    borderColor: '#10B981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Warning',
+                                    data: [],
+                                    borderColor: '#F59E0B',
+                                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Critical',
+                                    data: [],
+                                    borderColor: '#EF4444',
+                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Expired',
+                                    data: [],
+                                    borderColor: '#6B7280',
+                                    backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                                    tension: 0.4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top'
+                                }
+                            }
+                        }
+                    });
+
+                    // Alert Chart
+                    const alertCtx = document.getElementById('alertChart').getContext('2d');
+                    this.alertChart = new Chart(alertCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                data: [],
+                                backgroundColor: [
+                                    '#F59E0B',
+                                    '#EF4444',
+                                    '#6B7280',
+                                    '#3B82F6'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                },
+
+                updateCharts() {
+                    if (!this.analytics) return;
+
+                    // Update SSL Trends Chart
+                    if (this.sslTrendsChart && this.analytics.ssl_trends) {
+                        const trends = this.analytics.ssl_trends;
+                        this.sslTrendsChart.data.labels = trends.map(t => t.date);
+                        this.sslTrendsChart.data.datasets[0].data = trends.map(t => t.healthy_domains);
+                        this.sslTrendsChart.data.datasets[1].data = trends.map(t => t.warning_domains);
+                        this.sslTrendsChart.data.datasets[2].data = trends.map(t => t.critical_domains);
+                        this.sslTrendsChart.data.datasets[3].data = trends.map(t => t.expired_domains);
+                        this.sslTrendsChart.update();
+                    }
+
+                    // Update Alert Chart
+                    if (this.alertChart && this.analytics.alert_analytics) {
+                        const alerts = this.analytics.alert_analytics;
+                        this.alertChart.data.labels = alerts.map(a => a.alert_type);
+                        this.alertChart.data.datasets[0].data = alerts.map(a => a.count);
+                        this.alertChart.update();
+                    }
+                },
+
+                getMetricTrendClass(trend) {
+                    const classes = {
+                        'up': 'text-green-600',
+                        'down': 'text-red-600',
+                        'stable': 'text-gray-600'
+                    };
+                    return classes[trend] || 'text-gray-600';
+                },
+
+                getMetricTrendIcon(trend) {
+                    const icons = {
+                        'up': 'fas fa-arrow-up',
+                        'down': 'fas fa-arrow-down',
+                        'stable': 'fas fa-minus'
+                    };
+                    return icons[trend] || 'fas fa-minus';
+                },
+
+                formatMetricValue(value) {
+                    if (typeof value === 'number') {
+                        if (value >= 1000) {
+                            return (value / 1000).toFixed(1) + 'k';
+                        }
+                        return value.toFixed(1);
+                    }
+                    return value;
+                },
+
+                getStatusClass(status) {
+                    const classes = {
+                        'healthy': 'bg-green-100 text-green-800',
+                        'warning': 'bg-yellow-100 text-yellow-800',
+                        'critical': 'bg-red-100 text-red-800',
+                        'expired': 'bg-gray-100 text-gray-800'
+                    };
+                    return classes[status] || 'bg-gray-100 text-gray-800';
+                },
+
+                async exportData(format) {
+                    try {
+                        const response = await fetch(`${this.getApiBaseUrl()}/analytics/export?period=${this.period}&format=${format}`);
+                        if (response.ok) {
+                            if (format === 'json') {
+                                const data = await response.json();
+                                this.downloadJSON(data, `analytics-${this.period}.json`);
+                            } else {
+                                const csv = await response.text();
+                                this.downloadCSV(csv, `analytics-${this.period}.csv`);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error exporting data:', error);
+                    }
+                },
+
+                downloadJSON(data, filename) {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+
+                downloadCSV(csv, filename) {
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+
+                getApiBaseUrl() {
+                    return window.location.hostname === 'localhost' 
+                        ? 'http://localhost:8000' 
+                        : 'https://ssl-monitor-api.onrender.com';
+                },
+
+                toggleLanguage() {
+                    this.currentLanguage = this.currentLanguage === 'en' ? 'de' : 'en';
+                    // Implement language switching logic
+                }
+            }
+        }
+    </script>
+</body>
+</html>

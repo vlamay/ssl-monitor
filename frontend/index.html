@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Certificate Monitor - Professional Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h1>SSL Monitor</h1>
+                </div>
+                <div class="header-stats" id="headerStats">
+                    <div class="stat-card">
+                        <i class="fas fa-globe"></i>
+                        <div>
+                            <span class="stat-value" id="totalDomains">0</span>
+                            <span class="stat-label">Domains</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <span class="stat-value" id="activeDomains">0</span>
+                            <span class="stat-label">Active</span>
+                        </div>
+                    </div>
+                    <div class="stat-card warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <span class="stat-value" id="expiringDomains">0</span>
+                            <span class="stat-label">Expiring</span>
+                        </div>
+                    </div>
+                    <div class="stat-card error">
+                        <i class="fas fa-times-circle"></i>
+                        <div>
+                            <span class="stat-value" id="errorDomains">0</span>
+                            <span class="stat-label">Errors</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Add Domain Section -->
+            <section class="add-domain-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Domain</h2>
+                </div>
+                <div class="add-domain-form">
+                    <input 
+                        type="text" 
+                        id="domainInput" 
+                        placeholder="Enter domain (e.g., example.com)"
+                        class="domain-input"
+                    >
+                    <input 
+                        type="number" 
+                        id="thresholdInput" 
+                        placeholder="Alert threshold (days)"
+                        value="30"
+                        min="1"
+                        max="365"
+                        class="threshold-input"
+                    >
+                    <button onclick="addDomain()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Domain
+                    </button>
+                    <button onclick="checkAllDomains()" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Check All
+                    </button>
+                </div>
+            </section>
+
+            <!-- Domain List Section -->
+            <section class="domains-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list"></i> Monitored Domains</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterDomains('all')">All</button>
+                        <button class="filter-btn" onclick="filterDomains('healthy')">Healthy</button>
+                        <button class="filter-btn" onclick="filterDomains('warning')">Warning</button>
+                        <button class="filter-btn" onclick="filterDomains('critical')">Critical</button>
+                        <button class="filter-btn" onclick="filterDomains('error')">Error</button>
+                    </div>
+                </div>
+                <div id="domainList" class="domain-list">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading domains...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 SSL Monitor Platform | Professional Certificate Monitoring</p>
+            <p>API Status: <span id="apiStatus" class="status-dot"></span></p>
+        </footer>
+    </div>
+
+    <!-- Modal for Domain Details -->
+    <div id="domainModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Domain Details</h2>
+            <div id="modalBody" class="modal-body">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enterprise SSL Certificate Monitoring - Never miss SSL expiry again. 24/7 automated monitoring with instant alerts.">
+    <title>SSL Monitor Pro - Enterprise SSL Certificate Monitoring</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#0066FF',
+                            navy: '#0A0B1A',
+                            green: '#00D4AA',
+                            orange: '#FF6B35',
+                            red: '#FF4757'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Responsive Detection -->
+    <script src="js/responsive.js"></script>
+    
+    <!-- Internationalization -->
+    <script src="js/i18n.js"></script>
+    <link rel="stylesheet" href="css/i18n.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-hero {
+            background: linear-gradient(135deg, #0A0B1A 0%, #1E293B 100%);
+        }
+        
+        .gradient-premium {
+            background: linear-gradient(90deg, #0066FF 0%, #00D4AA 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 102, 255, 0.15);
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-50" 
+      x-data="{ 
+          mobileMenu: false, 
+          scrolled: false,
+          stats: { uptime: '99.9%', checks: '1M+', response: '<1min' }
+      }" 
+      x-init="window.addEventListener('scroll', () => { scrolled = window.pageYOffset > 20 })">
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" 
+         :class="scrolled ? 'bg-white shadow-lg' : 'bg-transparent'">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg gradient-premium flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">🔒</span>
+                    </div>
+                    <span class="text-xl font-bold" 
+                          :class="scrolled ? 'text-brand-navy' : 'text-white'">
+                        SSL Monitor Pro
+                    </span>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" 
+                       class="font-medium transition-colors" 
+                       :class="scrolled ? 'text-gray-700 hover:text-brand-blue' : 'text-white/90 hover:text-white'"
+                       data-i18n="nav.features">
+                        Features
+                    </a>
+                    <a href="#pricing" 
+                       class="font-medium transition-colors" 
+                       :class="scrolled ? 'text-gray-700 hover:text-brand-blue' : 'text-white/90 hover:text-white'"
+                       data-i18n="nav.pricing">
+                        Pricing
+                    </a>
+                    <a href="https://status.cloudsre.xyz/docs" 
+                       class="font-medium transition-colors" 
+                       :class="scrolled ? 'text-gray-700 hover:text-brand-blue' : 'text-white/90 hover:text-white'"
+                       data-i18n="nav.api_docs">
+                        API Docs
+                    </a>
+                    <a href="dashboard-enhanced.html" 
+                       class="px-6 py-2 rounded-lg font-semibold transition-all transform hover:scale-105 gradient-premium text-white shadow-lg hover:shadow-xl"
+                       data-i18n="nav.dashboard">
+                        📊 Enhanced Dashboard
+                    </a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <button @click="mobileMenu = !mobileMenu" 
+                        class="md:hidden p-2"
+                        :class="scrolled ? 'text-brand-navy' : 'text-white'">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path x-show="!mobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path x-show="mobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenu" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform scale-95"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             class="md:hidden bg-white shadow-lg rounded-b-2xl">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#features" @click="mobileMenu = false" 
+                   class="block px-4 py-3 text-gray-700 hover:bg-brand-blue hover:text-white rounded-lg transition-colors">
+                    Features
+                </a>
+                <a href="#pricing" @click="mobileMenu = false" 
+                   class="block px-4 py-3 text-gray-700 hover:bg-brand-blue hover:text-white rounded-lg transition-colors">
+                    Pricing
+                </a>
+                <a href="https://status.cloudsre.xyz/docs" @click="mobileMenu = false" 
+                   class="block px-4 py-3 text-gray-700 hover:bg-brand-blue hover:text-white rounded-lg transition-colors">
+                    API Docs
+                </a>
+                <a href="dashboard.html" 
+                   class="block px-4 py-3 gradient-premium text-white text-center rounded-lg font-semibold">
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero pt-24 pb-20 px-4 overflow-hidden relative">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-12 fade-in-up">
+                <!-- Trust Badge -->
+                <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full mb-8 border border-white/20">
+                    <span class="w-2 h-2 bg-brand-green rounded-full pulse-ring"></span>
+                    <span class="text-white/90 text-sm font-medium">Trusted by 1000+ companies worldwide</span>
+                </div>
+                
+                <!-- Main Heading -->
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight" data-i18n="hero.title">
+                    Never Miss SSL Certificate Expiry Again
+                </h1>
+                
+                <!-- Subheading -->
+                <p class="text-xl md:text-2xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed" data-i18n="hero.description">
+                    24/7 automated SSL monitoring with instant alerts. Protect your business from downtime and security risks.
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                    <a href="dashboard.html" 
+                       class="group relative px-8 py-4 gradient-premium text-white rounded-xl font-semibold text-lg transition-all transform hover:scale-105 hover:shadow-2xl"
+                       data-i18n="buttons.start_trial">
+                        <span class="relative z-10">Start Free Trial</span>
+                        <div class="absolute inset-0 rounded-xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </a>
+                    <a href="#features" 
+                       class="px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 text-white rounded-xl font-semibold text-lg hover:bg-white/20 transition-all"
+                       data-i18n="buttons.learn_more">
+                        See How It Works
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
+                    <div class="text-center fade-in-up" style="animation-delay: 0.1s">
+                        <div class="text-4xl md:text-5xl font-bold text-white mb-2" x-text="stats.checks"></div>
+                        <div class="text-white/70 text-sm md:text-base">SSL Checks Daily</div>
+                    </div>
+                    <div class="text-center fade-in-up" style="animation-delay: 0.2s">
+                        <div class="text-4xl md:text-5xl font-bold text-white mb-2" x-text="stats.uptime"></div>
+                        <div class="text-white/70 text-sm md:text-base">Service Uptime</div>
+                    </div>
+                    <div class="text-center fade-in-up" style="animation-delay: 0.3s">
+                        <div class="text-4xl md:text-5xl font-bold text-white mb-2" x-text="stats.response"></div>
+                        <div class="text-white/70 text-sm md:text-base">Alert Response</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-semibold mb-4">
+                    FEATURES
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-brand-navy mb-4">
+                    Enterprise-Grade Monitoring
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Everything you need to keep your SSL certificates secure and up-to-date
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card glass-card p-8 rounded-2xl">
+                    <div class="w-14 h-14 gradient-premium rounded-xl flex items-center justify-center mb-6 floating">
+                        <span class="text-3xl">🔍</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-brand-navy mb-4">
+                        24/7 Monitoring
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Continuous SSL certificate monitoring with automatic checks every hour. Real-time status updates and instant notifications.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card glass-card p-8 rounded-2xl">
+                    <div class="w-14 h-14 bg-brand-green/20 rounded-xl flex items-center justify-center mb-6 floating" style="animation-delay: 0.1s">
+                        <span class="text-3xl">⚡</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-brand-navy mb-4">
+                        Instant Alerts
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Multi-channel notifications via Email, Slack, Telegram, or Webhook. Never miss an expiration warning.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card glass-card p-8 rounded-2xl">
+                    <div class="w-14 h-14 bg-brand-orange/20 rounded-xl flex items-center justify-center mb-6 floating" style="animation-delay: 0.2s">
+                        <span class="text-3xl">📊</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-brand-navy mb-4">
+                        Advanced Analytics
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Comprehensive dashboards with historical data, trends, and compliance reports for your entire certificate portfolio.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card glass-card p-8 rounded-2xl">
+                    <div class="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6 floating" style="animation-delay: 0.3s">
+                        <span class="text-3xl">🌍</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-brand-navy mb-4">
+                        Global Coverage
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Monitor domains from multiple locations worldwide with low-latency checks and regional failover support.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card glass-card p-8 rounded-2xl">
+                    <div class="w-14 h-14 bg-red-500/20 rounded-xl flex items-center justify-center mb-6 floating" style="animation-delay: 0.4s">
+                        <span class="text-3xl">🔐</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-brand-navy mb-4">
+                        GDPR Compliant
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Enterprise-grade security with full GDPR compliance, data encryption, and comprehensive audit logs.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card glass-card p-8 rounded-2xl">
+                    <div class="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 floating" style="animation-delay: 0.5s">
+                        <span class="text-3xl">🚀</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-brand-navy mb-4">
+                        Easy Integration
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        RESTful API, webhooks, and SDKs for seamless integration with your existing infrastructure and tools.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="inline-block px-4 py-2 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-semibold mb-4">
+                    PRICING
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-brand-navy mb-4">
+                    Simple, Transparent Pricing
+                </h2>
+                <p class="text-xl text-gray-600 mb-4">
+                    Choose the plan that fits your needs
+                </p>
+                <p class="text-brand-green font-semibold">
+                    7-day free trial • No credit card required • Cancel anytime
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Starter Plan -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-200 hover:border-brand-blue hover:shadow-2xl transition-all duration-300">
+                    <div class="mb-8">
+                        <div class="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">Starter</div>
+                        <div class="flex items-baseline mb-4">
+                            <span class="text-5xl font-bold text-brand-navy">€19</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+                        <p class="text-gray-600">Perfect for small businesses</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">10 domains monitoring</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Email alerts</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Basic dashboard</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">24/7 monitoring</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="dashboard.html" 
+                       class="block w-full bg-brand-blue text-white text-center py-4 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl">
+                        Start Free Trial
+                    </a>
+                </div>
+                
+                <!-- Professional Plan (Featured) -->
+                <div class="bg-white rounded-2xl shadow-2xl p-8 border-2 border-brand-blue transform md:scale-105 relative">
+                    <!-- Popular Badge -->
+                    <div class="absolute -top-5 left-1/2 transform -translate-x-1/2">
+                        <span class="gradient-premium text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                            MOST POPULAR
+                        </span>
+                    </div>
+                    
+                    <div class="mb-8 mt-4">
+                        <div class="text-sm font-semibold text-brand-blue uppercase tracking-wide mb-2">Professional</div>
+                        <div class="flex items-baseline mb-4">
+                            <span class="text-5xl font-bold text-brand-navy">€49</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+                        <p class="text-gray-600">For growing teams</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700"><strong>50 domains</strong> monitoring</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Multi-channel alerts</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Advanced analytics</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Compliance reports</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Priority support</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="dashboard.html" 
+                       class="block w-full gradient-premium text-white text-center py-4 rounded-xl font-semibold hover:shadow-xl transition-all">
+                        Start Free Trial
+                    </a>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-200 hover:border-brand-navy hover:shadow-2xl transition-all duration-300">
+                    <div class="mb-8">
+                        <div class="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">Enterprise</div>
+                        <div class="flex items-baseline mb-4">
+                            <span class="text-5xl font-bold text-brand-navy">€149</span>
+                            <span class="text-gray-600 ml-2">/month</span>
+                        </div>
+                        <p class="text-gray-600">For large organizations</p>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700"><strong>Unlimited</strong> domains</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Custom integrations</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">White-label option</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">Dedicated account manager</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-brand-green mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-gray-700">99.9% SLA guarantee</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="mailto:vla.maidaniuk@gmail.com?subject=SSL Monitor Pro Enterprise" 
+                       class="block w-full bg-brand-navy text-white text-center py-4 rounded-xl font-semibold hover:bg-gray-900 transition-all shadow-lg">
+                        Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 gradient-hero relative overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                Ready to Protect Your Business?
+            </h2>
+            <p class="text-xl text-white/80 mb-8 leading-relaxed">
+                Join 1000+ companies monitoring their SSL certificates with confidence.<br>
+                Start your 7-day free trial today. No credit card required.
+            </p>
+            <a href="dashboard.html" 
+               class="inline-block px-10 py-5 bg-white text-brand-blue rounded-xl font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl">
+                Start Your Free Trial →
+            </a>
+            <p class="text-white/60 mt-6 text-sm">
+                ✓ No credit card required  •  ✓ 7-day free trial  •  ✓ Cancel anytime
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-navy text-gray-300 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg gradient-premium flex items-center justify-center">
+                            <span class="text-white text-xl">🔒</span>
+                        </div>
+                        <span class="text-2xl font-bold text-white">SSL Monitor Pro</span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Enterprise-grade SSL certificate monitoring for businesses of all sizes.
+                        Protect your customers and maintain trust with automated SSL monitoring.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://linkedin.com/in/maidaniuk" class="text-gray-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="https://192.168.1.10/root/ssl-monitor-pro" class="text-gray-400 hover:text-white transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-white mb-4">Product</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a></li>
+                        <li><a href="dashboard.html" class="text-gray-400 hover:text-white transition-colors">Dashboard</a></li>
+                        <li><a href="https://status.cloudsre.xyz/docs" class="text-gray-400 hover:text-white transition-colors">API Docs</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-bold text-white mb-4">Contact</h4>
+                    <ul class="space-y-3">
+                        <li class="text-gray-400">
+                            <a href="mailto:vla.maidaniuk@gmail.com" class="hover:text-white transition-colors">
+                                vla.maidaniuk@gmail.com
+                            </a>
+                        </li>
+                        <li class="text-gray-400">
+                            <a href="tel:+420721579603" class="hover:text-white transition-colors">
+                                +420 721 579 603
+                            </a>
+                        </li>
+                        <li class="text-gray-400">Prague, Czech Republic</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-400">
+                    © 2025 SSL Monitor Pro. Built with ❤️ by DevOps engineers for DevOps teams.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
+
+

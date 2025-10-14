@@ -1,0 +1,38 @@
+# === SSL MONITOR PRO - RENDER ENVIRONMENT VARIABLES ===
+# Copy-paste these into Render Dashboard → ssl-monitor-api → Environment
+# URL: https://dashboard.render.com
+
+# === Security Keys ===
+SECRET_KEY=eaefa6224b2d9e5671c352c2f3f3988c85abad57011c310535e4f3591ccbd2b6
+JWT_SECRET_KEY=5c623dd403a425fd371eeb92c85b0ebe2888a10f5f454e7f76848e6b827d5acf
+
+# === Stripe (Test Mode) ===
+STRIPE_PUBLISHABLE_KEY=pk_test_51SGoJM20i6fmlbYduMC9YLdC5PU1TEE9i1MOIM8mGcyAZY1Lx3TYuu02w8zGHbKsSRVTMuWUaz1yVBbHUG8Iivro00XaWGmEmY
+STRIPE_SECRET_KEY=sk_test_51SGoJM20i6fmlbYddqN7SFX5II50PU8FNXk3TddOnH6QipGMvXwsmUxvoOKFITR42B924oxrc12Mx5t9pAQMX6Q700Zv95jBJt
+STRIPE_WEBHOOK_SECRET=whsec_VUdbazTehwdBrVba06aKkc14fzuxYwu0
+
+# === Telegram Bot ===
+TELEGRAM_BOT_TOKEN=7409378539:AAHGan44vnafc8FOWgyF0FnE3mmHaYhdhrs
+TELEGRAM_CHAT_ID=8159854958
+
+# === URLs ===
+FRONTEND_URL=https://cloudsre.xyz
+BACKEND_URL=https://ssl-monitor-api.onrender.com
+
+# === Admin & Support ===
+ADMIN_EMAIL=vla.maidaniuk@gmail.com
+ALERT_EMAIL=vla.maidaniuk@gmail.com
+SUPPORT_EMAIL=vla.maidaniuk@gmail.com
+
+# === CORS (Important!) ===
+CORS_ORIGINS=https://cloudsre.xyz,https://www.cloudsre.xyz,https://ssl-monitor-api.onrender.com
+
+# === Additional Config ===
+PYTHON_VERSION=3.11.10
+LOG_LEVEL=INFO
+DEBUG=False
+
+# === NOTE ===
+# DATABASE_URL and REDIS_URL are auto-configured by Render
+# Don't add them manually
+

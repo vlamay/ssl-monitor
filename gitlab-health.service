@@ -1,0 +1,16 @@
+[Unit]
+Description=GitLab Health Check Service
+After=gitlab-runsvdir.service
+Requires=gitlab-runsvdir.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/vmaidaniuk/Cursor/ssl-monitor-final/gitlab-health-check.sh
+User=vmaidaniuk
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
+

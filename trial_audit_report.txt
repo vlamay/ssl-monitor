@@ -1,0 +1,64 @@
+🔍 TRIAL PERIOD AUDIT
+====================
+
+📁 Searching for '14-day' or '14 day' mentions...
+---
+./STRIPE_DASHBOARD_SETUP.md:15:Trial period: 14 days
+./STRIPE_DASHBOARD_SETUP.md:31:Trial period: 14 days
+./STRIPE_DASHBOARD_SETUP.md:47:Trial period: 14 days
+./FIRST_SALE_CHECKLIST.md:55:  ✓ 14-day free trial
+./FIRST_SALE_CHECKLIST.md:111:  • 14-day free trial
+./README.md:234:- ✅ 14-day free trial
+./README.md:448:- **Free Trial**: 14 days, no credit card required
+./README.md:539:**No credit card required** • **14-day free trial** • **Cancel anytime**
+./frontend-modern/index-enhanced.html:373:                    14-day free trial • No credit card required • Cancel anytime
+./frontend-modern/index-enhanced.html:540:                Start your 14-day free trial today. No credit card required.
+./frontend-modern/index-enhanced.html:547:                ✓ No credit card required  •  ✓ 14-day free trial  •  ✓ Cancel anytime
+./frontend-modern/index.html:373:                    14-day free trial • No credit card required • Cancel anytime
+./frontend-modern/index.html:540:                Start your 14-day free trial today. No credit card required.
+./frontend-modern/index.html:547:                ✓ No credit card required  •  ✓ 14-day free trial  •  ✓ Cancel anytime
+./frontend-modern/index-old.html:260:                    14-day free trial. No credit card required.
+./frontend-modern/index-old.html:401:                No credit card required • 14-day free trial • Cancel anytime
+./backend/services/email_campaigns.py:86:                    <p>Thanks for starting your 14-day free trial. You now have access to professional SSL certificate monitoring that will help you avoid costly downtime.</p>
+./backend/services/email_campaigns.py:133:        Thanks for starting your 14-day free trial. Here's how to get started:
+./backend/app/billing.py:91:                trial_ends_at="14 days from now"
+./frontend/landing.html:311:            All plans include <strong>14-day free trial</strong>. No credit card required.
+./frontend/pricing.html:7:    <meta name="description" content="Choose the perfect SSL monitoring plan for your business. 14-day free trial, no credit card required.">
+./frontend/pricing.html:318:        <p>Start monitoring your SSL certificates today. All plans include 14-day free trial.</p>
+./frontend/pricing.html:432:                Start monitoring your SSL certificates immediately with full access to all features. No credit card required. After 14 days, choose a plan to continue or cancel anytime.
+./DEPLOYMENT_SUMMARY.md:62:- ✅ Checkout sessions with 14-day trial
+./DEPLOYMENT_SUMMARY.md:196:  ✓ 14-day free trial
+./STRIPE_SETUP.md:10:- Trial: 14 days
+./STRIPE_SETUP.md:18:- Trial: 14 days
+./STRIPE_SETUP.md:27:- Trial: 14 days
+
+📁 Searching for '7-day' or '7 day' mentions...
+---
+./RENDER_DEPLOY_INSTRUCTIONS.md:220:Next: Get your first paying customer within 7 days!
+./FIRST_SALE_CHECKLIST.md:247:- Expires: When 20 used or 7 days
+./PRODUCTION_PLAN.md:21:- **Особенности:** 7-day trial + Stripe + Telegram
+./PRODUCTION_PLAN.md:104:- ✅ 7-day free trial
+./PRODUCTION_PLAN.md:375:- ✅ 7-day trial (короче цикл)
+./MONITORING_SETUP.md:94:# Retention: 7 days (free tier)
+./MONITORING_SETUP.md:110:- SSL expiry < 7 days
+./TESTING_RESULTS.md:73:- ✅ Expiry date correctly parsed (77 days remaining)
+./АНАЛИЗ_ПРОЕКТА.md:487:Expires in: 77 days
+./PROJECT_COMPLETE.md:256:   - 7-day history
+./PRODUCTION_LAUNCH.md:96:  - 7 days history
+./frontend/landing.html:273:                    <li><i class="fas fa-check"></i> 7-day history</li>
+./frontend/pricing.html:339:                    <li><i class="fas fa-check"></i> 7-day history</li>
+./DEPLOYMENT_SUMMARY.md:50:- ✅ `FIRST_SALE_CHECKLIST.md` - First sale in 7 days
+./STEP_BY_STEP_DEPLOY.md:493:6. **Get first paying customer** - within 7 days!
+./STEP_BY_STEP_DEPLOY.md:548:**Next**: Get your first paying customer within 7 days!
+
+📁 Searching for TRIAL_DAYS or trial_period_days...
+---
+./backend/services/stripe_manager.py:144:                                trial_days: int = 14):
+./backend/services/stripe_manager.py:166:                    'trial_period_days': trial_days,
+./backend/services/stripe_manager.py:183:    def create_subscription(self, customer_id: str, plan_name: str, trial_days: int = 14):
+./backend/services/stripe_manager.py:191:                trial_period_days=trial_days,
+./backend/app/billing.py:26:    trial_days: int = 14,
+./backend/app/billing.py:40:            trial_days=trial_days
+./backend/app/billing.py:47:            "trial_days": trial_days
+
+✅ Audit complete!

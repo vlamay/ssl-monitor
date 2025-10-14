@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Monitor Pro - Pricing & Plans</title>
+    <meta name="description" content="Choose the perfect SSL monitoring plan for your business. 7-day free trial, no credit card required.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .trial-badge {
+            display: inline-block;
+            background: #00d4aa;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: -40px auto 60px;
+            padding: 0 20px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid #667eea;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: "MOST POPULAR";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #667eea;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .plan-price span {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .plan-description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-features i {
+            color: #00d4aa;
+            font-size: 1.2rem;
+            width: 25px;
+        }
+
+        .plan-features li.disabled {
+            color: #999;
+        }
+
+        .plan-features li.disabled i {
+            color: #ddd;
+        }
+
+        .cta-button {
+            display: block;
+            width: 100%;
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .cta-button.secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .features-comparison {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .features-comparison h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comparison-row:first-child {
+            background: #667eea;
+            color: white;
+            font-weight: 700;
+        }
+
+        .comparison-row:hover {
+            background: #f8f9fa;
+        }
+
+        .comparison-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .comparison-cell:first-child {
+            justify-content: flex-start;
+            font-weight: 600;
+        }
+
+        .faq-section {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .faq-answer {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .trust-badges {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+        }
+
+        .trust-badges h3 {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .badge i {
+            font-size: 2rem;
+            color: #00d4aa;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-cell {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>Choose Your Plan</h1>
+        <p>Start monitoring your SSL certificates today. All plans include 7-day free trial.</p>
+        <div class="trial-badge">
+            <i class="fas fa-gift"></i> 7-Day Free Trial • No Credit Card Required
+        </div>
+    </section>
+
+    <div class="pricing-container">
+        <div class="pricing-grid">
+            <!-- Starter Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">
+                    €19<span>/month</span>
+                </div>
+                <div class="plan-description">
+                    Perfect for small websites and personal projects
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 10 domains monitoring</li>
+                    <li><i class="fas fa-check"></i> Hourly SSL checks</li>
+                    <li><i class="fas fa-check"></i> Email alerts</li>
+                    <li><i class="fas fa-check"></i> 7-day history</li>
+                    <li><i class="fas fa-check"></i> Basic dashboard</li>
+                    <li><i class="fas fa-check"></i> Email support</li>
+                    <li class="disabled"><i class="fas fa-times"></i> Telegram alerts</li>
+                    <li class="disabled"><i class="fas fa-times"></i> API access</li>
+                </ul>
+                <button class="cta-button" onclick="startTrial('starter')">
+                    Start Free Trial
+                </button>
+            </div>
+
+            <!-- Professional Plan (Featured) -->
+            <div class="pricing-card featured">
+                <div class="plan-name">Professional</div>
+                <div class="plan-price">
+                    €49<span>/month</span>
+                </div>
+                <div class="plan-description">
+                    For growing businesses and development teams
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 50 domains monitoring</li>
+                    <li><i class="fas fa-check"></i> Hourly SSL checks</li>
+                    <li><i class="fas fa-check"></i> Email + Telegram + Slack alerts</li>
+                    <li><i class="fas fa-check"></i> 90-day history</li>
+                    <li><i class="fas fa-check"></i> Advanced analytics</li>
+                    <li><i class="fas fa-check"></i> Full API access</li>
+                    <li><i class="fas fa-check"></i> Priority support</li>
+                    <li><i class="fas fa-check"></i> Compliance reports</li>
+                </ul>
+                <button class="cta-button" onclick="startTrial('professional')">
+                    Start Free Trial
+                </button>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-price">
+                    €149<span>/month</span>
+                </div>
+                <div class="plan-description">
+                    For large organizations with advanced needs
+                </div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Unlimited domains</li>
+                    <li><i class="fas fa-check"></i> Custom check intervals</li>
+                    <li><i class="fas fa-check"></i> All alert channels</li>
+                    <li><i class="fas fa-check"></i> Unlimited history</li>
+                    <li><i class="fas fa-check"></i> Advanced reporting</li>
+                    <li><i class="fas fa-check"></i> Full API access</li>
+                    <li><i class="fas fa-check"></i> 24/7 phone support</li>
+                    <li><i class="fas fa-check"></i> Custom SLA</li>
+                    <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                    <li><i class="fas fa-check"></i> Custom integrations</li>
+                </ul>
+                <button class="cta-button secondary" onclick="contactSales()">
+                    Contact Sales
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="trust-badges">
+        <h3>Why Choose SSL Monitor Pro?</h3>
+        <div class="badges">
+            <div class="badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Bank-level Security</span>
+            </div>
+            <div class="badge">
+                <i class="fas fa-clock"></i>
+                <span>99.9% Uptime</span>
+            </div>
+            <div class="badge">
+                <i class="fas fa-lock"></i>
+                <span>GDPR Compliant</span>
+            </div>
+            <div class="badge">
+                <i class="fas fa-headset"></i>
+                <span>24/7 Support</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i> How does the free trial work?
+            </div>
+            <div class="faq-answer">
+                Start monitoring your SSL certificates immediately with full access to all features. No credit card required. After 7 days, choose a plan to continue or cancel anytime.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i> Can I upgrade or downgrade my plan?
+            </div>
+            <div class="faq-answer">
+                Yes! You can change your plan at any time. Upgrades take effect immediately, and downgrades apply at the end of your current billing period.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i> Do you offer discounts for annual billing?
+            </div>
+            <div class="faq-answer">
+                Yes! Save 20% when you choose annual billing. Contact us for a custom quote.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i> What payment methods do you accept?
+            </div>
+            <div class="faq-answer">
+                We accept all major credit cards (Visa, Mastercard, Amex) and SEPA Direct Debit for EU customers.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i> Is there a refund policy?
+            </div>
+            <div class="faq-answer">
+                Yes! We offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your first payment, no questions asked.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function startTrial(plan) {
+            const email = prompt('Enter your email to start your free trial:');
+            if (!email) return;
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/billing/create-checkout-session', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: email,
+                        plan: plan,
+                        trial_days: 14
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
+                }
+
+                const data = await response.json();
+                
+                // Redirect to Stripe Checkout
+                window.location.href = data.checkout_url;
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to start trial. Please try again or contact support.');
+            }
+        }
+
+        function contactSales() {
+            window.location.href = 'mailto:sales@sslmonitor.pro?subject=Enterprise Plan Inquiry';
+        }
+    </script>
+</body>
+</html>
+
