@@ -1,0 +1,142 @@
+services:
+  # Main API Service
+  - type: web
+    name: ssl-monitor-api
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        fromService:
+          type: secret
+          name: secret-key
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: ssl-monitor-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: STRIPE_SECRET_KEY
+        fromService:
+          type: secret
+          name: stripe-secret-key
+      - key: STRIPE_WEBHOOK_SECRET
+        fromService:
+          type: secret
+          name: stripe-webhook-secret
+      - key: TELEGRAM_BOT_TOKEN
+        fromService:
+          type: secret
+          name: telegram-bot-token
+      - key: FRONTEND_URL
+        value: https://ssl-monitor.pages.dev
+
+  # Celery Worker Service
+  - type: worker
+    name: ssl-monitor-worker
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A app.tasks.celery_app worker --loglevel=info
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        fromService:
+          type: secret
+          name: secret-key
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: ssl-monitor-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+
+  # Celery Beat Scheduler
+  - type: worker
+    name: ssl-monitor-scheduler
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A app.tasks.celery_app beat --loglevel=info
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        fromService:
+          type: secret
+          name: secret-key
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: ssl-monitor-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: ssl-monitor-redis
+          property: connectionString
+
+databases:
+  # PostgreSQL Database
+  - name: ssl-monitor-db
+    plan: starter
+    databaseName: sslmonitor
+    user: sslmonitor
+
+# Redis Cache
+- name: ssl-monitor-redis
+  plan: starter
+
+secrets:
+  # Application Secrets
+  - name: secret-key
+    generateValue: true
+  - name: stripe-secret-key
+    sync: false
+  - name: stripe-webhook-secret
+    sync: false
+  - name: telegram-bot-token
+    sync: false
