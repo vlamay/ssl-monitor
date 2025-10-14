@@ -41,7 +41,10 @@ class Settings(BaseSettings):
     STRIPE_PRICE_YEARLY: str = Field(..., description="Stripe yearly price ID")
     
     # Calendly
-    CALENDLY_ACCESS_TOKEN: str = Field(..., description="Calendly access token")
+    CALENDLY_ACCESS_TOKEN: str = Field(
+        default="eyJraWQiOiIxY2UxZTEzNjE3ZGNmNzY2YjNjZWJjY2Y4ZGM1YmFmYThhNjVlNjg0MDIzZjdjMzJiZTgzNDliMjM4MDEzNWI0IiwidHlwIjoiUEFUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2F1dGguY2FsZW5kbHkuY29tIiwiaWF0IjoxNzYwNDc5MzMyLCJqdGkiOiIyYzk5ODY3Yi01NmJlLTQ4ZjEtODdhNS0xMDQ1ZGQ4NzlkYjYiLCJ1c2VyX3V1aWQiOiI0OTliYTY4OC0yMzBlLTQxNzUtYWZkMS00MDk5NTIwNTYwODAifQ.BoGSD4VXK1oZEPy3ayVLZ3pGp5diiIJgiPETedEOyWLENPu1rX8Q3T3oy9mxoxLZFwVm9BX6s5jJ4eOjZ4idbA", 
+        description="Calendly access token"
+    )
     CALENDLY_ORGANIZATION_URI: str = Field(..., description="Calendly organization URI")
     
     # Telegram

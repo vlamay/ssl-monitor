@@ -683,10 +683,33 @@
             alert('Checking all domains... This may take a few minutes.');
         }
 
-        function openCalendly() {
-            // Open WhatsApp with demo request
-            const message = '🎯 Request SSL Monitor Pro Demo Call\n\nHi! I would like to schedule a demo call to discuss SSL monitoring for my business.\n\nCurrent plan: Pro\nDomains: 12\n\nBest time: Any weekday 9-17 CET';
-            window.open(`https://wa.me/420721579603?text=${encodeURIComponent(message)}`, '_blank');
+        async function openCalendly() {
+            try {
+                // Get Calendly configuration from backend
+                const response = await fetch('/api/v1/calendly/widget-config');
+                const config = await response.json();
+                
+                if (config.available && config.widget_url) {
+                    // Open Calendly widget
+                    if (typeof Calendly !== 'undefined') {
+                        Calendly.initPopupWidget({
+                            url: config.widget_url
+                        });
+                    } else {
+                        // Direct link if widget not loaded
+                        window.open(config.widget_url, '_blank');
+                    }
+                } else {
+                    // Fallback to WhatsApp
+                    const message = '🎯 Request SSL Monitor Pro Demo Call\n\nHi! I would like to schedule a demo call to discuss SSL monitoring for my business.\n\nCurrent plan: Pro\nDomains: 12\n\nBest time: Any weekday 9-17 CET';
+                    window.open(`https://wa.me/420721579603?text=${encodeURIComponent(message)}`, '_blank');
+                }
+            } catch (error) {
+                console.error('Calendly integration error:', error);
+                // Fallback to WhatsApp
+                const message = '🎯 Request SSL Monitor Pro Demo Call\n\nHi! I would like to schedule a demo call to discuss SSL monitoring for my business.\n\nCurrent plan: Pro\nDomains: 12\n\nBest time: Any weekday 9-17 CET';
+                window.open(`https://wa.me/420721579603?text=${encodeURIComponent(message)}`, '_blank');
+            }
         }
 
         function showSupportMessage() {

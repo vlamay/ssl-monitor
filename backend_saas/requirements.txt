@@ -36,6 +36,7 @@ pyopenssl==23.3.0
 
 # Email
 fastapi-mail==1.4.1
+email-validator==2.1.0
 
 # Utilities
 python-dotenv==1.0.0

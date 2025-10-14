@@ -535,21 +535,30 @@
         }
         
         // Calendly integration
-        function openCalendly() {
-            // For now, redirect to WhatsApp for demo booking
-            // In production, this would integrate with Calendly API
-            showDemoRequest('My Company');
-            
-            // Alternative: Open Calendly popup (requires Calendly script)
-            if (typeof Calendly !== 'undefined') {
-                Calendly.initPopupWidget({
-                    url: 'https://calendly.com/ssl-monitor-pro/demo'
-                });
-            } else {
-                // Fallback: Open WhatsApp with demo request
-                window.open('https://wa.me/420721579603?text=' + encodeURIComponent(
-                    '🎯 Request SSL Monitor Pro Demo\n\nCompany: My Company\n\nInterested in enterprise SSL monitoring solution!'
-                ), '_blank');
+        async function openCalendly() {
+            try {
+                // Get Calendly configuration from backend
+                const response = await fetch('/api/v1/calendly/widget-config');
+                const config = await response.json();
+                
+                if (config.available && config.widget_url) {
+                    // Open Calendly widget
+                    if (typeof Calendly !== 'undefined') {
+                        Calendly.initPopupWidget({
+                            url: config.widget_url
+                        });
+                    } else {
+                        // Direct link if widget not loaded
+                        window.open(config.widget_url, '_blank');
+                    }
+                } else {
+                    // Fallback to WhatsApp
+                    showDemoRequest('My Company');
+                }
+            } catch (error) {
+                console.error('Calendly integration error:', error);
+                // Fallback to WhatsApp
+                showDemoRequest('My Company');
             }
         }
         

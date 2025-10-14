@@ -14,6 +14,7 @@ from app.core.database import init_db
 from app.api.v1.users.auth import router as auth_router
 from app.api.v1.endpoints.health import router as health_router
 from app.api.v1.whatsapp.contact import router as whatsapp_router
+from app.api.v1.calendly.booking import router as calendly_router
 
 # Configure logging
 logging.basicConfig(
@@ -131,6 +132,12 @@ app.include_router(
     whatsapp_router,
     prefix=f"{settings.API_V1_STR}/whatsapp",
     tags=["WhatsApp"]
+)
+
+app.include_router(
+    calendly_router,
+    prefix=f"{settings.API_V1_STR}/calendly",
+    tags=["Calendly"]
 )
 
 # Root endpoint
