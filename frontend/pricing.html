@@ -49,6 +49,33 @@
             font-size: 1.1rem;
         }
 
+        .early-adopter-banner {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            animation: pulse-glow 2s infinite;
+        }
+
+        .limited-time {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5); }
+            100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+        }
+
         .pricing-container {
             max-width: 1200px;
             margin: -40px auto 60px;
@@ -113,6 +140,32 @@
             font-size: 1.2rem;
             color: #666;
             font-weight: 400;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999 !important;
+            font-size: 2rem !important;
+            margin-right: 10px;
+        }
+
+        .discounted-price {
+            color: #e74c3c !important;
+            font-size: 3rem !important;
+            font-weight: 700 !important;
+        }
+
+        .price-period {
+            font-size: 1.1rem !important;
+            color: #666 !important;
+            margin-left: 5px;
+        }
+
+        .then-price {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
         }
 
         .plan-description {
@@ -314,10 +367,16 @@
 </head>
 <body>
     <section class="hero">
-        <h1>Zvolte Váš Plán</h1>
-        <p>Začněte monitorovat SSL certifikáty ještě dnes. Všechny plány obsahují 14denní trial zdarma.</p>
+        <h1>Choose Your Plan</h1>
+        <p>Start monitoring SSL certificates today. All plans include 7-day free trial.</p>
         <div class="trial-badge">
-            <i class="fas fa-gift"></i> 14denní Trial ZDARMA • Bez platební karty
+            <i class="fas fa-gift"></i> 7-Day Free Trial • No Credit Card Required
+        </div>
+        <div class="early-adopter-banner">
+            <i class="fas fa-fire"></i> 
+            <strong>EARLY ADOPTER SPECIAL:</strong> 
+            50% OFF First Month for First 100 Customers!
+            <span class="limited-time">Limited Time Offer</span>
         </div>
         <div style="margin-top: 30px;">
             <a href="https://calendly.com/ssl-monitor-pro/demo" class="cta-button" style="background: #00d4aa; color: white; text-decoration: none; padding: 15px 30px; border-radius: 8px; font-weight: 600;">
@@ -332,7 +391,10 @@
             <div class="pricing-card">
                 <div class="plan-name">Starter</div>
                 <div class="plan-price">
-                    3,000 CZK<span>/měsíc</span>
+                    <span class="original-price">€29</span>
+                    <span class="discounted-price">€14.50</span>
+                    <span class="price-period">/first month</span>
+                    <div class="then-price">Then €29/month</div>
                 </div>
                 <div class="plan-description">
                     Pro malé weby a osobní projekty
@@ -354,9 +416,12 @@
 
             <!-- Professional Plan (Featured) -->
             <div class="pricing-card featured">
-                <div class="plan-name">Business</div>
+                <div class="plan-name">Pro</div>
                 <div class="plan-price">
-                    8,000 CZK<span>/měsíc</span>
+                    <span class="original-price">€59</span>
+                    <span class="discounted-price">€29.50</span>
+                    <span class="price-period">/first month</span>
+                    <div class="then-price">Then €59/month</div>
                 </div>
                 <div class="plan-description">
                     Pro rostoucí firmy a development týmy
@@ -380,7 +445,7 @@
             <div class="pricing-card">
                 <div class="plan-name">Enterprise</div>
                 <div class="plan-price">
-                    od 20,000 CZK<span>/měsíc</span>
+                    Custom<span>/month</span>
                 </div>
                 <div class="plan-description">
                     Pro velké organizace s pokročilými potřebami

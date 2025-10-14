@@ -234,7 +234,7 @@ vs. Hosting Provider Tools:
 • On-premise options
 • Volume discounts
 
-💡 Early Adopter Special: 50% off first year!
+💡 Early Adopter Special: 50% off first month for first 100 customers!
 ```
 
 ---
@@ -250,8 +250,8 @@ Typical SSL Outage Costs:
 • Enterprise: €50,000 - €200,000
 
 SSL Monitor Pro Investment:
-• Starter Plan: €29/month = €348/year
-• Pro Plan: €59/month = €708/year
+• Starter Plan: €14.50 first month, then €29/month
+• Pro Plan: €29.50 first month, then €59/month
 
 ROI Calculation:
 • Prevent 1 outage = 15x ROI

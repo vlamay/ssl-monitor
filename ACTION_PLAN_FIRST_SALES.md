@@ -222,9 +222,9 @@ open https://ssl-monitor.pages.dev/user-cabinet.html
 ```bash
 # Pricing:
 # - Free 7-day trial
-# - Early adopter: 50% off first year
-# - Starter: €29/month → €14.50/month
-# - Pro: €59/month → €29.50/month
+# - Early adopter: 50% off first month for first 100 customers
+# - Starter: €29/month → €14.50 first month, then €29/month
+# - Pro: €59/month → €29.50 first month, then €59/month
 
 # Objections & Responses:
 # - "Too expensive" → ROI calculation

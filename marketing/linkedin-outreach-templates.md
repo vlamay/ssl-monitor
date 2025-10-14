@@ -97,7 +97,7 @@ Best regards,
 Vladyslav
 Founder, SSL Monitor Pro
 
-P.S. We're offering 50% off the first year for early adopters. Limited time offer.
+P.S. We're offering 50% off the first month for the first 100 customers. Limited time offer.
 ```
 
 ### **TEMPLATE 3: System Administrator (Problem-Solution)**
@@ -237,7 +237,7 @@ Hi [NAME],
 
 This is my final follow-up about SSL Monitor Pro.
 
-I'm offering **50% off the first year** for early adopters - this offer expires at the end of the month.
+I'm offering **50% off the first month** for the first 100 customers - this offer expires at the end of the month.
 
 **What you get:**
 - Unlimited domain monitoring
@@ -247,7 +247,7 @@ I'm offering **50% off the first year** for early adopters - this offer expires 
 - GDPR compliance
 
 **Regular price**: €29/month
-**Your price**: €14.50/month (first year only)
+**Your price**: €14.50 first month, then €29/month
 
 **Claim your discount**: https://ssl-monitor.pages.dev
 **Questions?** WhatsApp: +420 721 579 603
@@ -348,9 +348,10 @@ Vladyslav
 
 ### **Early Adopter Pricing:**
 - **Free Trial**: 7 days, no credit card
-- **Starter Plan**: €14.50/month (50% off)
-- **Pro Plan**: €29/month (50% off)
+- **Starter Plan**: €14.50 first month (50% off), then €29/month
+- **Pro Plan**: €29.50 first month (50% off), then €59/month
 - **Enterprise**: Custom pricing
+- **Limited**: First 100 customers only
 
 ### **Value Proposition:**
 - **ROI**: Prevent €15,000+ outages
